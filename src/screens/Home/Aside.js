@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Grid, Divider, List } from '@mui/material'
 import { makeStyles } from '@mui/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import InputHeader from '../../components/InputHeader'
 import ChatListItem from '../../components/ChatListItem'
@@ -9,21 +10,22 @@ import ChatListItem from '../../components/ChatListItem'
 import './Home.css'
 
 const useStyles = makeStyles({
-    divider: {
-      width: "100%",
+    divider: props => ({
+      width: props.desktopView ? "100%" : "80%",
       backgroundColor: "silver",
       marginTop: "15px",
       marginBottom: "15px",
-    },
-    list: {
-        width: '100%',
+    }),
+    list: props => ({
+        width: props.desktopView ? '100%' : "75%",
         maxWidth: 360,
         bgcolor: 'background.paper',
-    }
+    })
 })
 
 const Aside = ({chatList}) => {
-    const classes = useStyles()
+    const matches = useMediaQuery('(min-width:800px)')
+    const classes = useStyles({desktopView: matches})
 
     const renderList = () => {
         return (
@@ -31,7 +33,11 @@ const Aside = ({chatList}) => {
                 <Grid item xs = {12}>
                     <List className = {classes.list}>
                         { chatList.map(item => {
-                            return <ChatListItem listItem = {item} key = {item.id}/>
+                            return <ChatListItem 
+                                listItem = {item} 
+                                key = {item.id} 
+                                desktopView = {matches}
+                            />
                         }) }
                     </List>
                 </Grid>
@@ -43,7 +49,7 @@ const Aside = ({chatList}) => {
         return (
             <Grid container>
                 <Grid item xs = {12}>
-                    <InputHeader placeholder = "Search"/>
+                    <InputHeader placeholder = "Search" desktopView = {matches}/>
                 </Grid>
             </Grid>
         )
