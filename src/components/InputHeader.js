@@ -1,24 +1,22 @@
 import React from 'react'
 
-import {Paper, InputBase, Divider, IconButton, Avatar} from '@mui/material'
-import { deepOrange } from '@mui/material/colors'
+import {Paper, InputBase, Divider, IconButton} from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import { Search, Close } from '@mui/icons-material'
+import { Search, Close, PersonSearch } from '@mui/icons-material'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
-const useStyles = makeStyles({
-  root: {
+import StyledBadge from './StyledBadge'
+
+const useStyles = makeStyles((theme) => ({
+  root: props => ({
     p: '2px 4px', 
     display: 'flex', 
     alignItems: 'center', 
-    width: "100%", 
+    width: props.mobile ? "75%" : "100%", 
     backgroundColor: "#808B96"
-  },
+  }),
   avatar_btn: {
     p: '10px'
-  },
-  avatar: {
-    width: 30, 
-    height: 30
   },
   input_base: {
     ml: 1, 
@@ -31,15 +29,26 @@ const useStyles = makeStyles({
     height: 28, 
     m: 0.5,
   },
-})
+}))
 
 const InputHeader = ({placeholder, value}) => {
-    const classes = useStyles()
-    return (
-        <Paper component = "form" className = {classes.root}>
-            <IconButton className = {classes.avatar_btn} aria-label = "menu">
-                <Avatar sx = {{ bgcolor: deepOrange[500] }} className = {classes.avatar}>N</Avatar>
+    const matches = useMediaQuery('(min-width:800px)')
+    const classes = useStyles({mobile: !matches})
+
+    const renderMobileView = () => {
+        return (
+            <>
+            <IconButton className = {classes.icon_btn} aria-label = "directions">
+                <PersonSearch sx = {{color: "white", width: 30}}/>
             </IconButton>
+            <Divider className = {classes.divider} orientation = "vertical" />
+            </>
+        )
+    }
+
+    const renderDesktopView = () => {
+        return (
+            <>
             <InputBase
                 className = {classes.input_base}
                 placeholder = {placeholder}
@@ -54,6 +63,16 @@ const InputHeader = ({placeholder, value}) => {
             <IconButton className = {classes.icon_btn} aria-label = "directions">
                 <Close/>
             </IconButton>
+            </>
+        )
+    }
+
+    return (
+        <Paper component = "form" className = {classes.root}>
+            <IconButton className = {classes.avatar_btn} aria-label = "menu">
+                <StyledBadge bgColor = {"#D35400"}/>
+            </IconButton>
+            { matches ? renderDesktopView() : renderMobileView() }
         </Paper>
     )
 }

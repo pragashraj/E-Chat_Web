@@ -8,10 +8,20 @@ import './Home.css'
 
 class Home extends Component {
 
+    dummyList = [
+        {id: "1", avatar: "S", user: "Steve", recentMessage: "Hi there", dateTime: "10:27"},
+        {id: "2", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
+        {id: "3", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
+        {id: "4", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
+        {id: "5", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
+        {id: "6", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
+        {id: "7", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
+    ]
+
     renderCardLeft = () => {
         return (
             <div className = "card_left_content">
-                <Aside/>
+                <Aside chatList = {this.dummyList}/>
             </div>
         )
     }
