@@ -68,7 +68,7 @@ const InputHeader = ({placeholder, value, desktopView}) => {
     return (
         <Paper component = "form" className = {classes.root}>
             <IconButton className = {classes.avatar_btn} aria-label = "menu">
-                <StyledBadge bgColor = {"#D35400"}/>
+                <StyledBadge bgColor = "#D35400"/>
             </IconButton>
             { desktopView ? renderDesktopView() : renderMobileView() }
         </Paper>

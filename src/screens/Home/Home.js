@@ -4,6 +4,7 @@ import { Box, Grid } from '@mui/material'
 
 import Aside from './Aside'
 import Header from './Header'
+import Footer from './Footer'
 
 import './Home.css'
 
@@ -29,7 +30,7 @@ class Home extends Component {
 
                 </div>
                 <div className = "card_right_footer">
-
+                    <Footer/>
                 </div>
             </div>
         )

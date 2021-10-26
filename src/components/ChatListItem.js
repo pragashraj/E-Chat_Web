@@ -7,11 +7,11 @@ const useStyles = makeStyles({
     root: {
         p: '2px 4px', 
         width: "100%", 
-        backgroundColor: "#808B96",
+        backgroundColor: "#34495E",
         marginBottom: "5px"
     },
     dateTime: {
-        color: "#2C3E50",
+        color: "rgba(255, 255, 255, 0.5)",
         fontSize: "0.8rem"
     },
     mobileItemAvatar: {
@@ -52,9 +52,9 @@ const ChatListItem = ({listItem, desktopView}) => {
         return (
             <ListItemButton>
                 <ListItemAvatar>
-                    <Avatar sx = {{ bgcolor: `rgb(${rand}, ${rand}, 0)` }}>{listItem.avatar}</Avatar>
+                    <Avatar sx = {{ bgcolor: `rgba(52, ${rand}, 0)` }}>{listItem.avatar}</Avatar>
                 </ListItemAvatar>
-                <ListItemText primary = {listItem.user} secondary = {listItem.recentMessage} /> 
+                <ListItemText primary = {listItem.user} secondary = {listItem.recentMessage} sx = {{color: "rgba(255, 255, 255, 0.7)"}}/> 
                 <span className = {classes.dateTime}>{listItem.dateTime}</span>
             </ListItemButton>
         )

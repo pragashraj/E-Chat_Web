@@ -1,23 +1,41 @@
 import React from 'react'
 
-import {Box, TextField} from '@mui/material'
+import {TextField} from '@mui/material'
+import { styled } from '@mui/material/styles'
+
+const CssTextField = styled(TextField)({
+    '& label': {
+        color: 'rgba(255, 255, 255, 0.5)',
+    },
+    '& input': {
+        color: '#fff',
+    },
+    '& .MuiInput-underline:after': {
+        borderBottomColor: 'green',
+    },
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: '#fff',
+        },
+        '&:hover fieldset': {
+            borderColor: '#fff',
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: '#34495E',
+        },
+    },
+})
 
 const Input = ({label, name, size, value}) => {
     return (
-        <Box
-            component = "form"
-            sx = {{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}
-            noValidate
-            autoComplete="off"
-        >
-            <TextField
-                label = "Size"
-                id = {`outlined-size-${label}`}
-                size = {size}
-                value = {value}
-                name = {name}
-            />
-        </Box>
+        <CssTextField 
+            label = {label} 
+            id = {`outlined-size-${label}`}
+            size = {size} 
+            fullWidth
+            value = {value}
+            name = {name}
+        />
     )
 }
 

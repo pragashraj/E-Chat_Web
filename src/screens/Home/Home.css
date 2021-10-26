@@ -80,6 +80,7 @@
     width: 100%;
     height: 10vh;
     border-top: 1px solid #707B7C;
+    align-items: center;
 }
 
 .chat_header_root {
@@ -112,4 +113,22 @@
 .secondary_user_active {
     color: rgba(0, 255, 0, 0.8);
     font-size: 0.8rem;
+}
+
+.chat_footer_root {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.footer_input_blog {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.footer_input {
+    width: 100%;
 }
