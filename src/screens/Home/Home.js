@@ -9,9 +9,14 @@ import Footer from './Footer'
 import './Home.css'
 
 class Home extends Component {
+    state = {
+        searchValue: "",
+        messageValue: "",
+        selectedChatItem: {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
+    }
 
     dummyList = [
-        {id: "1", avatar: "S", user: "Steve", recentMessage: "Hi there", dateTime: "10:27"},
+        {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
         {id: "2", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
         {id: "3", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
         {id: "4", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
@@ -20,26 +25,77 @@ class Home extends Component {
         {id: "7", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
     ]
 
+    handleSendOnClick = () => {
+
+    }
+
+    handleSearchOnClick = () => {
+
+    }
+
+    handleSearchModalOnClick = () => {
+
+    }
+
+    handleCancelOnClick = () => {
+
+    }
+
+    handleSettingsOnClick = () => {
+
+    }
+
+    handleEmojiOnClick = () => {
+
+    }
+
+    handleChatListItemOnClick = (item) => {
+        this.setState({ selectedChatItem: item })
+    }
+
+    handleInputOnChange = (e) => {
+        const {name, value} = e.target
+        this.setState({ [name]: value })
+    }
+
     renderCardRight = () => {
+        const {messageValue, selectedChatItem} = this.state
         return (
             <div className = "card_right_content">
                 <div className = "card_right_header">
-                    <Header/>
+                    <Header
+                        selectedChatItem = {selectedChatItem}
+                        handleSettingsOnClick = {this.handleSettingsOnClick}
+                    />
                 </div>
                 <div className = "card_right_body">
 
                 </div>
                 <div className = "card_right_footer">
-                    <Footer/>
+                    <Footer
+                        value = {messageValue}
+                        handleInputOnChange = {this.handleInputOnChange}
+                        handleSendOnClick = {this.handleSendOnClick}
+                        handleEmojiOnClick = {this.handleEmojiOnClick}
+                    />
                 </div>
             </div>
         )
     }
 
     renderCardLeft = () => {
+        const {searchValue} = this.state
         return (
             <div className = "card_left_content">
-                <Aside chatList = {this.dummyList}/>
+                <Aside 
+                    chatList = {this.dummyList} 
+                    searchValue = {searchValue} 
+                    handleInputOnChange = {this.handleInputOnChange}
+                    handleChatListItemOnClick = {this.handleChatListItemOnClick}
+                    handleSearchOnClick = {this.handleSearchOnClick}
+                    handleSearchModalOnClick = {this.handleSearchModalOnClick}
+                    handleCancelOnClick = {this.handleCancelOnClick}
+                />
             </div>
         )
     }

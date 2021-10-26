@@ -7,13 +7,13 @@ import { Search, Close, PersonSearch } from '@mui/icons-material'
 import StyledBadge from './StyledBadge'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  root: props => ({
     p: '2px 4px', 
     display: 'flex', 
     alignItems: 'center', 
-    width: "100%", 
+    width: props.desktopView ? "100%" : "75%", 
     backgroundColor: "#808B96"
-  },
+  }),
   avatar_btn: {
     p: '10px'
   },
@@ -30,17 +30,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const InputHeader = ({placeholder, value, desktopView}) => {
+const InputHeader = ({
+  placeholder, 
+  value, 
+  desktopView, 
+  handleInputOnChange, 
+  handleSearchOnClick,
+  handleSearchModalOnClick,
+  handleCancelOnClick
+}) => {
     const classes = useStyles({desktopView: desktopView})
 
     const renderMobileView = () => {
         return (
-            <>
-            <IconButton className = {classes.icon_btn} aria-label = "search">
-                <PersonSearch sx = {{color: "white", width: 30}}/>
+            <IconButton className = {classes.icon_btn} aria-label = "search" onClick = {handleSearchModalOnClick}>
+                <PersonSearch sx = {{color: "white", width: 20}}/>
             </IconButton>
-            <Divider className = {classes.divider} orientation = "vertical" />
-            </>
         )
     }
 
@@ -52,13 +57,14 @@ const InputHeader = ({placeholder, value, desktopView}) => {
                 placeholder = {placeholder}
                 inputProps = {{ 'aria-label': placeholder }}
                 value = {value}
-                name = "search"
+                name = "searchValue"
+                onChange = {handleInputOnChange}
             />
-            <IconButton className = {classes.icon_btn} aria-label = "search">
+            <IconButton className = {classes.icon_btn} aria-label = "search" onClick = {handleSearchOnClick}>
                 <Search />
             </IconButton>
             <Divider className = {classes.divider} orientation = "vertical" />
-            <IconButton className = {classes.icon_btn} aria-label = "directions">
+            <IconButton className = {classes.icon_btn} aria-label = "directions" onClick = {handleCancelOnClick}>
                 <Close/>
             </IconButton>
             </>
@@ -68,7 +74,7 @@ const InputHeader = ({placeholder, value, desktopView}) => {
     return (
         <Paper component = "form" className = {classes.root}>
             <IconButton className = {classes.avatar_btn} aria-label = "menu">
-                <StyledBadge bgColor = "#D35400"/>
+                <StyledBadge bgColor = "#D35400" desktopView = {desktopView}/>
             </IconButton>
             { desktopView ? renderDesktopView() : renderMobileView() }
         </Paper>

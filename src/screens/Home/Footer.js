@@ -3,6 +3,7 @@ import React from 'react'
 import { Grid, IconButton } from '@mui/material'
 import { Send, EmojiEmotions } from '@mui/icons-material'
 import { makeStyles } from '@mui/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import Input from '../../components/Input'
 
@@ -14,23 +15,35 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center", 
         height: "100%",
     },
-    icon: {
+    icon: props => ({
         color: "white", 
-        width: 30
-    },
+        width: props.desktop ? 30 : 15
+    }),
 }))
 
-const Footer = () => {
-    const classes = useStyles()
+const Footer = ({
+    value, 
+    handleInputOnChange, 
+    handleSendOnClick,
+    handleEmojiOnClick
+}) => {
+    const matches = useMediaQuery('(min-width:800px)')
+    const classes = useStyles({desktop: matches})
 
     const renderInputBlog = () => {
         return (
             <div className = "footer_input_blog">
-                <IconButton aria-label = "settings">
+                <IconButton aria-label = "emojies" onClick = {handleEmojiOnClick}>
                     <EmojiEmotions className = {classes.icon}/>
                 </IconButton>
                 <div className = "footer_input">
-                    <Input size = "small" label = "Type your message........" name = "message"/>
+                    <Input 
+                        size = "small" 
+                        label = "Type your message........" 
+                        name = "messageValue" 
+                        value = {value} 
+                        handleInputOnChange = {handleInputOnChange}
+                    />
                 </div>
             </div>
         )
@@ -38,7 +51,7 @@ const Footer = () => {
 
     const renderSendBlog = () => {
         return (
-            <IconButton aria-label = "settings">
+            <IconButton aria-label = "send" onClick = {handleSendOnClick}>
                 <Send className = {classes.icon}/>
             </IconButton>
         )

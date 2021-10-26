@@ -23,7 +23,15 @@ const useStyles = makeStyles({
     })
 })
 
-const Aside = ({chatList}) => {
+const Aside = ({
+    chatList, 
+    searchValue, 
+    handleInputOnChange, 
+    handleChatListItemOnClick,
+    handleSearchOnClick,
+    handleSearchModalOnClick,
+    handleCancelOnClick
+}) => {
     const matches = useMediaQuery('(min-width:800px)')
     const classes = useStyles({desktopView: matches})
 
@@ -37,6 +45,7 @@ const Aside = ({chatList}) => {
                                 listItem = {item} 
                                 key = {item.id} 
                                 desktopView = {matches}
+                                handleChatListItemOnClick = {handleChatListItemOnClick}
                             />
                         }) }
                     </List>
@@ -49,7 +58,15 @@ const Aside = ({chatList}) => {
         return (
             <Grid container>
                 <Grid item xs = {12}>
-                    <InputHeader placeholder = "Search" desktopView = {matches}/>
+                    <InputHeader 
+                        placeholder = "Search" 
+                        desktopView = {matches} 
+                        value = {searchValue}
+                        handleInputOnChange = {handleInputOnChange}
+                        handleSearchOnClick = {handleSearchOnClick}
+                        handleSearchModalOnClick = {handleSearchModalOnClick}
+                        handleCancelOnClick = {handleCancelOnClick}
+                    />
                 </Grid>
             </Grid>
         )

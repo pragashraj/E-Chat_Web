@@ -32,14 +32,17 @@ const StyledAvatar = styled(Badge)(({ theme }) => ({
     },
 }))
 
-const StyledBadge = ({bgColor}) => {
+const StyledBadge = ({bgColor, desktopView}) => {
+    const res = desktopView ? 32 : 20
+    const size = desktopView ? "17px" : "10px" 
+    
     return (
         <StyledAvatar
             overlap = "circular"
             anchorOrigin = {{ vertical: 'bottom', horizontal: 'right' }}
             variant = "dot"
         >
-            <Avatar sx = {{ bgcolor: bgColor, width: 32, height: 32 }}>P</Avatar>
+            <Avatar sx = {{ bgcolor: bgColor, width: res, height: res, fontSize: size }}>P</Avatar>
         </StyledAvatar>
     )
 }

@@ -26,15 +26,16 @@ const CssTextField = styled(TextField)({
     },
 })
 
-const Input = ({label, name, size, value}) => {
+const Input = ({label, name, size, value, handleInputOnChange}) => {
     return (
         <CssTextField 
             label = {label} 
             id = {`outlined-size-${label}`}
             size = {size} 
-            fullWidth
             value = {value}
             name = {name}
+            onChange = {handleInputOnChange}
+            fullWidth
         />
     )
 }

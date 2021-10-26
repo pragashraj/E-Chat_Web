@@ -20,8 +20,8 @@ const useStyles = makeStyles({
         fontSize: '0.7rem'
     },
     mobileDateTime: {
-        color: "#2C3E50",
-        fontSize: "0.6rem",
+        color: "rgba(255, 255, 255, 0.5)",
+        fontSize: "0.5rem",
         marginLeft: "5px"
     },
     mobileListItem: {
@@ -31,13 +31,13 @@ const useStyles = makeStyles({
     }
 })
 
-const ChatListItem = ({listItem, desktopView}) => {
+const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
     const classes = useStyles()
     const rand = Math.floor(Math.random() * 100)
 
     const renderMobileView = () => {
         return (
-            <ListItemButton>
+            <ListItemButton onClick = {() => handleChatListItemOnClick(listItem)}>
                 <ListItemAvatar className = {classes.mobileListItem}>
                     <Avatar sx = {{ bgcolor: `rgb(${rand}, ${rand}, 0)` }} className = {classes.mobileItemAvatar}>
                         {listItem.avatar}
@@ -50,7 +50,7 @@ const ChatListItem = ({listItem, desktopView}) => {
 
     const renderDestopView = () => {
         return (
-            <ListItemButton>
+            <ListItemButton onClick = {() => handleChatListItemOnClick(listItem)}>
                 <ListItemAvatar>
                     <Avatar sx = {{ bgcolor: `rgba(52, ${rand}, 0)` }}>{listItem.avatar}</Avatar>
                 </ListItemAvatar>
