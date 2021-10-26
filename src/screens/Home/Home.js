@@ -14,6 +14,7 @@ class Home extends Component {
         searchValue: "",
         messageValue: "",
         selectedChatItem: {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
+        showEmojiPicker: false
     }
 
     dummyList = [
@@ -53,11 +54,15 @@ class Home extends Component {
     }
 
     handleEmojiOnClick = () => {
-
+        this.setState({ showEmojiPicker: !this.state.showEmojiPicker })
     }
 
     handleChatListItemOnClick = (item) => {
         this.setState({ selectedChatItem: item })
+    }
+
+    handleEmojiOnSelect = (e, emoji) => {
+        this.handleEmojiOnClick()
     }
 
     handleInputOnChange = (e) => {
@@ -66,7 +71,7 @@ class Home extends Component {
     }
 
     renderCardRight = () => {
-        const {messageValue, selectedChatItem} = this.state
+        const {messageValue, selectedChatItem, showEmojiPicker} = this.state
         return (
             <div className = "card_right_content">
                 <div className = "card_right_header">
@@ -81,9 +86,11 @@ class Home extends Component {
                 <div className = "card_right_footer">
                     <Footer
                         value = {messageValue}
+                        showEmojiPicker = {showEmojiPicker}
                         handleInputOnChange = {this.handleInputOnChange}
                         handleSendOnClick = {this.handleSendOnClick}
                         handleEmojiOnClick = {this.handleEmojiOnClick}
+                        handleEmojiOnSelect = {this.handleEmojiOnSelect}
                     />
                 </div>
             </div>
