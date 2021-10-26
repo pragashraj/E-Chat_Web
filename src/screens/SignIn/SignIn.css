@@ -1,0 +1,50 @@
+.signIn_root {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(0, 30, 60);
+    display: flex;
+}
+
+.signIn_body {
+    width: 80%;
+    margin-left: 10%;
+    height: 80vh;
+    margin-top: 10vh;
+    border-radius: 30px;
+    border: 2px solid #F8F9F9;
+    align-items: center;
+    justify-content: center;
+}
+
+.signIn_card {
+    width: 100%;
+    height: 79.5vh;
+    display: flex;
+}
+
+.form_root {
+    padding: 5%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.form_input {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.form_header {
+    margin-bottom: 15px;
+}
+
+.form_header_title {
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #fff;
+    font-size: 1.5rem;
+}
