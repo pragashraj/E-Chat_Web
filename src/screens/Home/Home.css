@@ -52,3 +52,64 @@
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+.card_right {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.card_right_content {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.card_right_header {
+    width: 100%;
+    height: 10vh;
+    border-bottom: 1px solid #707B7C;
+}
+
+.card_right_body {
+    width: 100%;
+    height: 60vh;
+}
+
+.card_right_footer {
+    width: 100%;
+    height: 10vh;
+    border-top: 1px solid #707B7C;
+}
+
+.chat_header_root {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.secondary_user_blog {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.secondary_user_detail {
+    margin-left: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.secondary_user_name {
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1.2px;
+}
+
+.secondary_user_active {
+    color: rgba(0, 255, 0, 0.8);
+    font-size: 0.8rem;
+}

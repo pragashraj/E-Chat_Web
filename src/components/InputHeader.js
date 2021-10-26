@@ -36,7 +36,7 @@ const InputHeader = ({placeholder, value, desktopView}) => {
     const renderMobileView = () => {
         return (
             <>
-            <IconButton className = {classes.icon_btn} aria-label = "directions">
+            <IconButton className = {classes.icon_btn} aria-label = "search">
                 <PersonSearch sx = {{color: "white", width: 30}}/>
             </IconButton>
             <Divider className = {classes.divider} orientation = "vertical" />
