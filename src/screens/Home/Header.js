@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import './Home.css'
+import {secondaryUserColor} from '../../values/values'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,7 +35,7 @@ const Header = ({selectedChatItem, handleSettingsOnClick}) => {
     const renderSecondaryUser = () => {
         return (
             <div className = "secondary_user_blog">
-                <Avatar sx = {{ bgcolor: "#34495E" }}>{selectedChatItem && selectedChatItem.avatar}</Avatar>
+                <Avatar sx = {{ bgcolor: secondaryUserColor }}>{selectedChatItem && selectedChatItem.avatar}</Avatar>
                 <div className = "secondary_user_detail">
                     <span className = "secondary_user_name">{selectedChatItem && selectedChatItem.user}</span>
                     <span className = "secondary_user_active">active</span>

@@ -52,7 +52,7 @@ const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
         return (
             <ListItemButton onClick = {() => handleChatListItemOnClick(listItem)}>
                 <ListItemAvatar>
-                    <Avatar sx = {{ bgcolor: `rgba(52, ${rand}, 0)` }}>{listItem.avatar}</Avatar>
+                    <Avatar sx = {{ bgcolor: `rgba(${rand}, 132, 73)` }}>{listItem.avatar}</Avatar>
                 </ListItemAvatar>
                 <ListItemText primary = {listItem.user} secondary = {listItem.recentMessage} sx = {{color: "rgba(255, 255, 255, 0.7)"}}/> 
                 <span className = {classes.dateTime}>{listItem.dateTime}</span>

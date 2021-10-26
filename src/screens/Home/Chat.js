@@ -3,6 +3,7 @@ import React from 'react'
 import ChatMessage from '../../components/ChatMessage'
 
 import './Home.css'
+import {endUserColor, secondaryUserColor} from '../../values/values'
 
 const Chat = ({chats}) => {
 
@@ -10,7 +11,7 @@ const Chat = ({chats}) => {
         return (
             <div className = "message_type_1">
                 <div className = "message_type_blog">
-                    <ChatMessage avatar = "P" message = {item.message} bgcolor = "#1E8449"/>
+                    <ChatMessage avatar = "P" message = {item.message} bgcolor = {endUserColor}/>
                     <span className = "message_type_1_date">{item.dateTime}</span>
                 </div>
             </div>
@@ -21,7 +22,7 @@ const Chat = ({chats}) => {
         return (
             <div className = "message_type_2">
                 <div className = "message_type_blog">
-                    <ChatMessage avatar = "S" message = {item.message} bgcolor = "#C0392B"/>
+                    <ChatMessage avatar = "S" message = {item.message} bgcolor = {secondaryUserColor}/>
                     <span className = "message_type_2_date">{item.dateTime}</span>
                 </div>
             </div>

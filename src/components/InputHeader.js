@@ -5,6 +5,7 @@ import { makeStyles } from '@mui/styles'
 import { Search, Close, PersonSearch } from '@mui/icons-material'
 
 import StyledBadge from './StyledBadge'
+import {endUserColor} from '../values/values'
 
 const useStyles = makeStyles((theme) => ({
   root: props => ({
@@ -74,7 +75,7 @@ const InputHeader = ({
     return (
         <Paper component = "form" className = {classes.root}>
             <IconButton className = {classes.avatar_btn} aria-label = "menu">
-                <StyledBadge bgColor = "#D35400" desktopView = {desktopView}/>
+                <StyledBadge bgColor = {endUserColor} desktopView = {desktopView}/>
             </IconButton>
             { desktopView ? renderDesktopView() : renderMobileView() }
         </Paper>
