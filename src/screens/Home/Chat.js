@@ -1,0 +1,40 @@
+import React from 'react'
+
+import ChatMessage from '../../components/ChatMessage'
+
+import './Home.css'
+
+const Chat = ({chats}) => {
+
+    const renderMessageType1 = (item) => {
+        return (
+            <div className = "message_type_1">
+                <div className = "message_type_blog">
+                    <ChatMessage avatar = "P" message = {item.message} bgcolor = "#1E8449"/>
+                    <span className = "message_type_1_date">{item.dateTime}</span>
+                </div>
+            </div>
+        )
+    }
+
+    const renderMessageType2 = (item) => {
+        return (
+            <div className = "message_type_2">
+                <div className = "message_type_blog">
+                    <ChatMessage avatar = "S" message = {item.message} bgcolor = "#C0392B"/>
+                    <span className = "message_type_2_date">{item.dateTime}</span>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className = "chat_list_body_root">
+            <div className = "chat_list_body">
+                { chats.map(item => item.owner === "own" ? renderMessageType1(item) : renderMessageType2(item)) }
+            </div>
+        </div>
+    )
+}
+
+export default Chat

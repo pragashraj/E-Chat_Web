@@ -134,6 +134,50 @@
     width: 100%;
 }
 
+.chat_list_body_root {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.chat_list_body {
+    padding: 10px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.message_type_1 {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.message_type_2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.message_type_blog {
+    display: flex;
+    flex-direction: column;
+}
+
+.message_type_1_date {
+    align-self: flex-end;
+    color: honeydew;
+    font-size: 0.7rem;
+    margin-right: 5px;
+}
+
+.message_type_2_date {
+    color: honeydew;
+    font-size: 0.7rem;
+    margin-left: 5px;
+}
+
 @media screen and (max-width: 600px) {
     .secondary_user_name {
         font-size: 0.5rem;

@@ -5,6 +5,7 @@ import { Box, Grid } from '@mui/material'
 import Aside from './Aside'
 import Header from './Header'
 import Footer from './Footer'
+import Chat from './Chat'
 
 import './Home.css'
 
@@ -23,6 +24,12 @@ class Home extends Component {
         {id: "5", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
         {id: "6", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
         {id: "7", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
+    ]
+
+    dummyChats = [
+        {id: "1", owner: "own", message: "Hello there, how are you", dateTime: "10:25"},
+        {id: "2", owner: "op", message: "I'm fine", dateTime: "10:40"},
+        {id: "3", owner: "op", message: "And you?", dateTime: "10:42"},
     ]
 
     handleSendOnClick = () => {
@@ -69,7 +76,7 @@ class Home extends Component {
                     />
                 </div>
                 <div className = "card_right_body">
-
+                    <Chat chats = {this.dummyChats}/>
                 </div>
                 <div className = "card_right_footer">
                     <Footer
