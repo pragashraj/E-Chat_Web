@@ -23,7 +23,7 @@
 }
 
 .form_root {
-    padding: 5%;
+    padding: 10%;
     width: 100%;
     height: 100%;
     display: flex;
@@ -34,12 +34,15 @@
 
 .form_input {
     width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .form_header {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
 .form_header_title {
@@ -47,4 +50,37 @@
     letter-spacing: 1.2px;
     color: #fff;
     font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.form_btn_root {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.form_forgot_password_root {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    justify-content: flex-end;
+    display: flex;
+    width: 100%;
+}
+
+.form_forgot_password {
+    color: grey;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.form_forgot_password:hover {
+    cursor: pointer;
+    color: #1E8449;
+}
+
+.form_btn {
+    width: 50%;
+    margin-right: 5px;
 }

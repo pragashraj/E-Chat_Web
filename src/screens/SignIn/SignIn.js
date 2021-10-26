@@ -13,6 +13,14 @@ class SignIn extends Component {
         password: ""
     }
 
+    handleSubmitOnClick = () => {
+        
+    }
+
+    handleCancelOnClick = () => {
+
+    }
+
     handleInputOnChange = (e) => {
         const {name, value} = e.target
         this.setState({ [name]: value })
@@ -41,6 +49,8 @@ class SignIn extends Component {
                         username = {username}
                         password = {password}
                         handleInputOnChange = {this.handleInputOnChange}
+                        handleCancelOnClick = {this.handleCancelOnClick}
+                        handleSubmitOnClick = {this.handleSubmitOnClick}
                     />
                 </Grid>
             </Grid>
