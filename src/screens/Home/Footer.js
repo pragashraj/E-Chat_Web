@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import Input from '../../components/Input'
+import EmojiPicker from '../../components/EmojiPicker'
 
 import './Home.css'
 
@@ -19,16 +20,33 @@ const useStyles = makeStyles((theme) => ({
         color: "white", 
         width: props.desktop ? 30 : 15
     }),
+    emojiPicker: {
+        position: "absolute", 
+        bottom: "130px",
+    }
 }))
 
 const Footer = ({
     value, 
+    showEmojiPicker,
     handleInputOnChange, 
     handleSendOnClick,
-    handleEmojiOnClick
+    handleEmojiOnClick,
+    handleEmojiOnSelect
 }) => {
     const matches = useMediaQuery('(min-width:800px)')
     const classes = useStyles({desktop: matches})
+
+    const renderEmojiPicker = () => {
+        return (
+            <div className = {classes.emojiPicker}>
+                <EmojiPicker 
+                    handleEmojiOnSelect = {handleEmojiOnSelect} 
+                    desktopView = {matches}
+                />
+            </div>
+        )
+    }
 
     const renderInputBlog = () => {
         return (
@@ -67,6 +85,7 @@ const Footer = ({
                     { renderSendBlog() }
                 </Grid>
             </Grid>
+            { showEmojiPicker && renderEmojiPicker() }
         </div>
     )
 }
