@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 
 import { Box, Grid, CssBaseline  } from '@mui/material'
 
 import Form from './Form'
 import SnackBar from '../../components/SnackBar'
+import {storeLoginResponse} from '../../redux/actions/authAction'
 
 import './SignIn.css'
-import connect from '../../assets/images/connect.jpg'
+import loginCover from '../../assets/images/connect.jpg'
 
 class SignIn extends Component {
     state = {
@@ -20,7 +22,8 @@ class SignIn extends Component {
     handleSubmitOnClick = () => {
         const {username, password} = this.state
         if (username && password) {
-            
+            const data = {username}
+            this.props.storeLoginResponse(data)
         } 
         else {
             this.setSnackBar("Fields cannot be empty", "error")
@@ -62,7 +65,7 @@ class SignIn extends Component {
                 <CssBaseline />
                 <Grid item xs = {false} sm = {4} md = {6}
                     sx = {{
-                        backgroundImage: `url(${connect})`,
+                        backgroundImage: `url(${loginCover})`,
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                         t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -102,4 +105,10 @@ class SignIn extends Component {
     }
 }
 
-export default SignIn
+const mapDispatchToProps = dispatch => {
+    return {
+        storeLoginResponse: data => { dispatch(storeLoginResponse(data)) }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(SignIn)

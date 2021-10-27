@@ -1,15 +1,20 @@
 import React from 'react'
+import {connect} from 'react-redux'
 
 import Home from './screens/Home/Home'
 import SignIn from './screens/SignIn/SignIn'
 
-const App = () => {
-    const auth = true
+const App = ({authResponse}) => {
     return (
         <div className = "App">
-            { auth ? <Home/> : <SignIn/> }
+            { authResponse ? <Home/> : <SignIn/> }
         </div>
     )
 }
 
-export default App
+
+const mapStateToProps = state => ({
+    authResponse: state.auth.authResponse,
+})
+
+export default connect(mapStateToProps)(App)

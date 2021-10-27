@@ -60,7 +60,7 @@ const InputHeader = ({
                 value = {value}
                 name = "searchValue"
                 onChange = {handleInputOnChange}
-                autoComplete = {false}
+                autoComplete = 'off'
             />
             <IconButton className = {classes.icon_btn} aria-label = "search" onClick = {handleSearchOnClick}>
                 <Search />
