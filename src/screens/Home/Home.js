@@ -14,7 +14,8 @@ class Home extends Component {
         searchValue: "",
         messageValue: "",
         selectedChatItem: {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
-        showEmojiPicker: false
+        showEmojiPicker: false,
+        chosenEmoji: null
     }
 
     dummyList = [
@@ -63,6 +64,7 @@ class Home extends Component {
 
     handleEmojiOnSelect = (e, emoji) => {
         this.handleEmojiOnClick()
+        this.setState({ chosenEmoji: emoji })
     }
 
     handleInputOnChange = (e) => {

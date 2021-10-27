@@ -26,7 +26,7 @@ const CssTextField = styled(TextField)({
     },
 })
 
-const Input = ({label, name, size, value, handleInputOnChange}) => {
+const Input = ({label, name, size, value, handleInputOnChange, type}) => {
     return (
         <CssTextField 
             label = {label} 
@@ -36,6 +36,8 @@ const Input = ({label, name, size, value, handleInputOnChange}) => {
             name = {name}
             onChange = {handleInputOnChange}
             fullWidth
+            autoComplete = 'off'
+            type = {type}
         />
     )
 }
