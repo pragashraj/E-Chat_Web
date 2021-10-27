@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Box, Grid, CssBaseline  } from '@mui/material'
 
 import Form from './Form'
+import SnackBar from '../../components/SnackBar'
 
 import './SignIn.css'
 import connect from '../../assets/images/connect.jpg'
@@ -10,15 +11,24 @@ import connect from '../../assets/images/connect.jpg'
 class SignIn extends Component {
     state = {
         username: "",
-        password: ""
+        password: "",
+        showSnackBar: false, 
+        snackMessage: "", 
+        severity: ""
     }
 
     handleSubmitOnClick = () => {
-        
+        const {username, password} = this.state
+        if (username && password) {
+            
+        } 
+        else {
+            this.setSnackBar("Fields cannot be empty", "error")
+        }
     }
 
     handleCancelOnClick = () => {
-
+        this.setState({ username: "", password: "" })
     }
 
     handleInputOnChange = (e) => {
@@ -26,6 +36,24 @@ class SignIn extends Component {
         this.setState({ [name]: value })
     }
 
+    handleSnackBarClose = () => {
+        this.setState({ showSnackBar: false, snackMessage: "", severity: "" })
+    }
+
+    setSnackBar = (message, severity) => {
+        this.setState({ showSnackBar: true, snackMessage: message, severity })
+    }
+
+    renderSnackBar = () => {
+        const {showSnackBar, snackMessage, severity} = this.state
+        return <SnackBar
+            open = {showSnackBar}
+            message = {snackMessage}
+            severity = {severity}
+            align = {{ vertical: 'bottom', horizontal: 'right' }}
+            handleClose = {this.handleSnackBarClose}
+        />
+    }
 
     renderMain = () => {
         const {username, password} = this.state
@@ -58,6 +86,7 @@ class SignIn extends Component {
     }
 
     render() {
+        const { showSnackBar } = this.state
         return (
             <div className = "signIn_root">
                 <div className = "signIn_body">
@@ -67,6 +96,7 @@ class SignIn extends Component {
                         </div>
                     </Box>
                 </div>
+                { showSnackBar && this.renderSnackBar() }
             </div>
         )
     }

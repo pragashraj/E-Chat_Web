@@ -25,7 +25,7 @@ const Form = ({
         )
     }
 
-    const renderInput = (label, name, value) => {
+    const renderInput = (label, name, value, type) => {
         return (
             <div className = "form_input">
                 <Input
@@ -34,6 +34,7 @@ const Form = ({
                     label = {label}
                     name = {name}
                     value = {value}
+                    type = {type}
                 />
             </div>    
         )
@@ -62,7 +63,7 @@ const Form = ({
         <div className = "form_root">
             { renderHeader() }
             { renderInput("Username", "username", username) }
-            { renderInput("Password", "password", password) }
+            { renderInput("Password", "password", password, "password") }
             { renderForgotPassword() }
             { renderButtons() }
         </div>

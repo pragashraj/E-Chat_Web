@@ -4,12 +4,8 @@ import Button from '@mui/material/Button'
 
 const SecondaryButton = ({title, onClick}) => {
     return (
-        <Button 
-            variant = "outlined" 
-            fullWidth 
-            onClick = {onClick}
-        >
-            {title}
+        <Button variant = "outlined" fullWidth onClick = {onClick}>
+        {title}
         </Button>
     )
 }
