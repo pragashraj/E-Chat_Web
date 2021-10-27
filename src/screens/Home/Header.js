@@ -1,9 +1,11 @@
 import React from 'react'
 
-import { Grid, IconButton, Avatar } from '@mui/material'
+import { Grid, IconButton, Avatar, Box } from '@mui/material'
 import { Settings } from '@mui/icons-material'
 import { makeStyles } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
+
+import CustomMenu from '../../components/CustomMenu'
 
 import './Home.css'
 import {secondaryUserColor} from '../../values/values'
@@ -20,15 +22,31 @@ const useStyles = makeStyles((theme) => ({
     }),
 }))
 
-const Header = ({selectedChatItem, handleSettingsOnClick}) => {
+const Header = ({
+    selectedChatItem, 
+    handleSettingsOnClick, 
+    handleClose, 
+    handleMenuItemOnPress, 
+    anchorEl,
+    menuItems
+}) => {
     const matches = useMediaQuery('(min-width:800px)')
     const classes = useStyles({desktop: matches})
 
     const renderSettingBlog = () => {
         return (
-            <IconButton aria-label = "settings" onClick = {handleSettingsOnClick}>
-                <Settings className = {classes.icon}/>
-            </IconButton>
+            <Box>
+                <IconButton aria-label = "settings" onClick = {handleSettingsOnClick}>
+                    <Settings className = {classes.icon}/>
+                </IconButton>
+                <CustomMenu
+                    open = {Boolean(anchorEl)}
+                    menuItems = {menuItems}
+                    anchorEl = {anchorEl}
+                    handleClose = {handleClose}
+                    handleMenuItemOnPress = {handleMenuItemOnPress}
+                />
+            </Box>
         )
     }
 

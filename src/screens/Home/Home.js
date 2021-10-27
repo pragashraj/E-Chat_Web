@@ -7,7 +7,7 @@ import Aside from './Aside'
 import Header from './Header'
 import Footer from './Footer'
 import Chat from './Chat'
-import {storeLoginResponse} from '../../redux/actions/authAction'
+import {logout} from '../../redux/actions/authAction'
 
 import './Home.css'
 
@@ -17,7 +17,9 @@ class Home extends Component {
         messageValue: "",
         selectedChatItem: {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
         showEmojiPicker: false,
-        chosenEmoji: null
+        chosenEmoji: null,
+        anchorEl: null,
+        openSearchModalForMobile: false
     }
 
     dummyList = [
@@ -37,23 +39,29 @@ class Home extends Component {
     ]
 
     handleSendOnClick = () => {
+        const {messageValue} = this.state
+        if (messageValue) {
 
+        }
     }
 
     handleSearchOnClick = () => {
+        const {searchValue} = this.state
+        if (searchValue) {
 
+        }
     }
 
     handleSearchModalOnClick = () => {
-
+        this.setState({openSearchModalForMobile: !this.state.openSearchModalForMobile})
     }
 
     handleCancelOnClick = () => {
-
+        this.setState({ searchValue: "" })
     }
 
-    handleSettingsOnClick = () => {
-
+    handleSettingsOnClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget })
     }
 
     handleEmojiOnClick = () => {
@@ -69,19 +77,35 @@ class Home extends Component {
         this.setState({ chosenEmoji: emoji })
     }
 
+    handleMenuItemOnPress = (item) => {
+        switch(item) {
+            case "Logout" : this.props.logout()
+                break
+            default: return
+        }
+    }
+
     handleInputOnChange = (e) => {
         const {name, value} = e.target
         this.setState({ [name]: value })
     }
 
+    handleMenuClose = () => {
+        this.setState({ anchorEl: null })
+    }
+
     renderCardRight = () => {
-        const {messageValue, selectedChatItem, showEmojiPicker} = this.state
+        const {messageValue, selectedChatItem, showEmojiPicker, anchorEl} = this.state
         return (
             <div className = "card_right_content">
                 <div className = "card_right_header">
                     <Header
                         selectedChatItem = {selectedChatItem}
                         handleSettingsOnClick = {this.handleSettingsOnClick}
+                        handleClose = {this.handleMenuClose}
+                        handleMenuItemOnPress = {this.handleMenuItemOnPress}
+                        anchorEl = {anchorEl}
+                        menuItems = {["Logout"]}
                     />
                 </div>
                 <div className = "card_right_body">
@@ -166,7 +190,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
     return {
-        storeLoginResponse: data => { dispatch(storeLoginResponse(data)) }
+        logout: () => { dispatch(logout()) }
     }
 }
 
