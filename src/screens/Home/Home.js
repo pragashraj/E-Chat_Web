@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 
 import { Box, Grid } from '@mui/material'
 
@@ -6,6 +7,7 @@ import Aside from './Aside'
 import Header from './Header'
 import Footer from './Footer'
 import Chat from './Chat'
+import {storeLoginResponse} from '../../redux/actions/authAction'
 
 import './Home.css'
 
@@ -158,4 +160,14 @@ class Home extends Component {
     }
 }
 
-export default Home
+const mapStateToProps = state => ({
+    authResponse: state.auth.authResponse,
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+        storeLoginResponse: data => { dispatch(storeLoginResponse(data)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
