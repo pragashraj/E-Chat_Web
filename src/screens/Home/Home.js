@@ -9,6 +9,7 @@ import Header from './Header'
 import Footer from './Footer'
 import Chat from './Chat'
 import {logout} from '../../redux/actions/authAction'
+import {createStompClient} from '../../utils/stompClient'
 
 import './Home.css'
 
@@ -40,9 +41,37 @@ class Home extends Component {
         {id: "3", owner: "op", message: "And you?", dateTime: "10:42"},
     ]
 
+    stompClient = null
+
+    componentDidMount() {
+        const user = this.props.authResponse
+        if (user) {
+            this.stompClient = createStompClient()
+            this.stompClient.connect({}, this.onConnected, this.onError)
+        } 
+        else {
+            this.props.logout()
+        }
+    }
+
+    onConnected = () => {
+        const user = this.props.authResponse
+        this.stompClient.subscribe('/topic/pubic', this.onMessageReceived)
+        this.stompClient.send("/app/addUser", {}, JSON.stringify({ sender: user.username, type: 'JOIN' }))
+    }
+
+    onError = () => {
+        
+    }
+
+    onMessageReceived = (payload) => {
+        var message = JSON.parse(payload.body)
+        console.log(message)
+    }
+
     sendMessage = () => {
         const {messageValue} = this.state
-        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify({
+        this.stompClient.send('/app/sendMessage', {}, JSON.stringify({
             content: messageValue,
             sender: "Kamal",
             receiver: "Steve"
@@ -174,13 +203,11 @@ class Home extends Component {
 
     renderChatBody = () => {
         return (
-            <Box>
-                <Grid container spacing = {2}>
-                    <Grid item xs = {12}>
-                        { this.renderChatCard() }
-                    </Grid>
+            <Grid container spacing = {2}>
+                <Grid item xs = {12}>
+                    { this.renderChatCard() }
                 </Grid>
-            </Box>
+            </Grid>
         )
     }
 
@@ -194,7 +221,6 @@ class Home extends Component {
                     var messages = this.state.messages
                     messages.push(msg)
                     this.setState({ messages })
-                    console.log(messages)
                 }}
                 ref = {(client) => { this.clientRef = client }}
             />
@@ -205,9 +231,10 @@ class Home extends Component {
         return (
             <div className = "home_root">
                 <div className = "chat_body">
-                    { this.renderChatBody() }
+                    <Box> 
+                        { this.renderChatBody() } 
+                    </Box>
                 </div>
-                { this.renderSockJsClient() }
             </div>
         )
     }
