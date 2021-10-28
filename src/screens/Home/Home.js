@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
+import SockJsClient from 'react-stomp'
 
 import { Box, Grid } from '@mui/material'
 
@@ -19,7 +20,8 @@ class Home extends Component {
         showEmojiPicker: false,
         chosenEmoji: null,
         anchorEl: null,
-        openSearchModalForMobile: false
+        openSearchModalForMobile: false,
+        messages: []
     }
 
     dummyList = [
@@ -38,10 +40,19 @@ class Home extends Component {
         {id: "3", owner: "op", message: "And you?", dateTime: "10:42"},
     ]
 
+    sendMessage = () => {
+        const {messageValue} = this.state
+        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify({
+            content: messageValue,
+            sender: "Kamal",
+            receiver: "Steve"
+        }))
+    }
+
     handleSendOnClick = () => {
         const {messageValue} = this.state
         if (messageValue) {
-
+            this.sendMessage()
         }
     }
 
@@ -173,12 +184,30 @@ class Home extends Component {
         )
     }
 
+    renderSockJsClient = () => {
+        return (
+            <SockJsClient url = 'http://localhost:8080/ws/'
+                topics = {['/topic/public']}
+                onConnect = {() => { console.log("connected") }}
+                onDisconnect = {() => { console.log("Disconnected") }}
+                onMessage = {(msg) => {
+                    var messages = this.state.messages
+                    messages.push(msg)
+                    this.setState({ messages })
+                    console.log(messages)
+                }}
+                ref = {(client) => { this.clientRef = client }}
+            />
+        )
+    }
+
     render() {
         return (
             <div className = "home_root">
                 <div className = "chat_body">
                     { this.renderChatBody() }
                 </div>
+                { this.renderSockJsClient() }
             </div>
         )
     }
