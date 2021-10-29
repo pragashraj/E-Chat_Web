@@ -16,20 +16,22 @@ class Home extends Component {
     state = {
         searchValue: "",
         messageValue: "",
-        selectedChatItem: {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
+        selectedChatItem: null,
         showEmojiPicker: false,
         chosenEmoji: null,
         anchorEl: null,
         openSearchModalForMobile: false,
         broadcasts: [],
         joinedUsers: [],
-        connected: false
+        connected: false,
+        selectedChatListType: "My chats",
+        myChats: [],
+        chatListItems: [],
+        chatMessages: []
     }
 
     dummyChats = [
         {id: "1", owner: "own", message: "Hello there, how are you", dateTime: "10:25"},
-        {id: "2", owner: "op", message: "I'm fine", dateTime: "10:40"},
-        {id: "3", owner: "op", message: "And you?", dateTime: "10:42"},
     ]
 
     onConnected = () => {
@@ -44,7 +46,7 @@ class Home extends Component {
     }
 
     onDisconnected = () => {
-        console.log("disconnected")
+        this.setState({ connected: false })
     }
 
     onMessageReceived = (payload) => {
@@ -162,12 +164,24 @@ class Home extends Component {
         this.setState({ [name]: value })
     }
 
+    handleListTypeOnChange = (e) => {
+        const value = e.target.value
+        const  {joinedUsers, myChats} = this.state
+
+        let data = joinedUsers
+        if (value === "My chats") {
+            data = myChats
+        }
+
+        this.setState({ selectedChatListType: value, chatListItems: data })
+    }
+
     handleMenuClose = () => {
         this.setState({ anchorEl: null })
     }
 
     renderCardRight = () => {
-        const {messageValue, selectedChatItem, showEmojiPicker, anchorEl} = this.state
+        const {messageValue, selectedChatItem, showEmojiPicker, anchorEl, chatMessages} = this.state
         return (
             <div className = "card_right_content">
                 <div className = "card_right_header">
@@ -181,7 +195,7 @@ class Home extends Component {
                     />
                 </div>
                 <div className = "card_right_body">
-                    <Chat chats = {this.dummyChats}/>
+                    <Chat chats = {chatMessages}/>
                 </div>
                 <div className = "card_right_footer">
                     <Footer
@@ -198,17 +212,19 @@ class Home extends Component {
     }
 
     renderCardLeft = () => {
-        const {searchValue, joinedUsers} = this.state
+        const {searchValue, chatListItems, selectedChatListType} = this.state
         return (
             <div className = "card_left_content">
                 <Aside 
-                    chatList = {joinedUsers} 
-                    searchValue = {searchValue} 
+                    chatList = {chatListItems} 
+                    searchValue = {searchValue}
+                    selectedChatListType = {selectedChatListType} 
                     handleInputOnChange = {this.handleInputOnChange}
                     handleChatListItemOnClick = {this.handleChatListItemOnClick}
                     handleSearchOnClick = {this.handleSearchOnClick}
                     handleSearchModalOnClick = {this.handleSearchModalOnClick}
                     handleCancelOnClick = {this.handleCancelOnClick}
+                    handleListTypeOnChange = {this.handleListTypeOnChange}
                 />
             </div>
         )

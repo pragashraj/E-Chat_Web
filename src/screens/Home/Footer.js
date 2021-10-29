@@ -7,6 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import Input from '../../components/Input'
 import EmojiPicker from '../../components/EmojiPicker'
+import {Circular, Text} from '../../components/skeletons/index'
 
 import './Home.css'
 
@@ -27,8 +28,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Footer = ({
-    value, 
+    value,
     showEmojiPicker,
+    selectedChatItem,
     handleInputOnChange, 
     handleSendOnClick,
     handleEmojiOnClick,
@@ -45,6 +47,23 @@ const Footer = ({
                     desktopView = {matches}
                 />
             </div>
+        )
+    }
+
+    const renderInputBlogSkeleton = () => {
+        return (
+            <div className = "footer_input_blog">
+                <Circular width = {22} height = {22}/>
+                <div className = "footer_input">
+                    <Text width = {"100%"} height = {40}/>
+                </div>
+            </div>
+        )
+    }
+
+    const renderSendBlogSkeleton = () => {
+        return (
+            <Circular width = {22} height = {22}/>
         )
     }
 
@@ -75,8 +94,21 @@ const Footer = ({
         )
     }
 
-    return (
-        <div className = "chat_footer_root">
+    const renderSkeletonRoot = () => {
+        return (
+            <Grid container className = {classes.root}>
+                <Grid item xs = {10} md = {11}>
+                    { renderInputBlogSkeleton() }
+                </Grid>
+                <Grid item xs = {2} md = {1}>
+                    { renderSendBlogSkeleton() }
+                </Grid>
+            </Grid>
+        )
+    }
+
+    const renderRoot = () => {
+        return (
             <Grid container className = {classes.root}>
                 <Grid item xs = {10} md = {11}>
                     { renderInputBlog() }
@@ -85,6 +117,12 @@ const Footer = ({
                     { renderSendBlog() }
                 </Grid>
             </Grid>
+        )
+    }
+
+    return (
+        <div className = "chat_footer_root">
+            { selectedChatItem ? renderRoot() : renderSkeletonRoot() }
             { showEmojiPicker && renderEmojiPicker() }
         </div>
     )

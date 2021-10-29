@@ -6,6 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import InputHeader from '../../components/InputHeader'
 import ChatListItem from '../../components/ChatListItem'
+import Selector from '../../components/Selector'
 
 import './Home.css'
 
@@ -24,13 +25,15 @@ const useStyles = makeStyles({
 })
 
 const Aside = ({
-    chatList, 
-    searchValue, 
-    handleInputOnChange, 
+    chatList,
+    searchValue,
+    selectedChatListType,
+    handleInputOnChange,
     handleChatListItemOnClick,
     handleSearchOnClick,
     handleSearchModalOnClick,
-    handleCancelOnClick
+    handleCancelOnClick,
+    handleListTypeOnChange
 }) => {
     const matches = useMediaQuery('(min-width:800px)')
     const classes = useStyles({desktopView: matches})
@@ -78,6 +81,13 @@ const Aside = ({
                 { renderHeader() }
             </div>
             <Divider className = {classes.divider} orientation = "horizontal" />
+            <div className = "aside_choicer">
+                <Selector 
+                    menuItems = {["My chats", "Online users"]} 
+                    value = {selectedChatListType}
+                    handleChange = {handleListTypeOnChange}
+                />
+            </div>
             <div className = "aside_chat_list">
                 { renderList() }
             </div>

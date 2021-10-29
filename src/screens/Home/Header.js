@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import CustomMenu from '../../components/CustomMenu'
+import {Circular, Text} from '../../components/skeletons/index'
 
 import './Home.css'
 import {secondaryUserColor} from '../../values/values'
@@ -32,6 +33,25 @@ const Header = ({
 }) => {
     const matches = useMediaQuery('(min-width:800px)')
     const classes = useStyles({desktop: matches})
+
+    const renderSettingBlogSkeleton = () => {
+        return (
+            <Box>
+                <Circular width = {22} height = {22}/>
+            </Box>
+        )
+    }
+
+    const renderSecondaryUserSkeleton = () => {
+        return (
+            <div className = "secondary_user_blog">
+                <Circular width = {32} height = {32}/>
+                <div className = "secondary_user_detail">
+                    <Text width = {matches ? 200 : 50} height = {30}/>
+                </div>
+            </div>
+        )
+    }
 
     const renderSettingBlog = () => {
         return (
@@ -62,8 +82,21 @@ const Header = ({
         )
     }
 
-    return (
-        <div className = "chat_header_root">
+    const renderSkeletonRoot = () => {
+        return (
+            <Grid container className = {classes.root}>
+                <Grid item xs = {10} md = {11}>
+                    { renderSecondaryUserSkeleton() }
+                </Grid>
+                <Grid item xs = {2} md = {1}>
+                    { renderSettingBlogSkeleton() }
+                </Grid>
+            </Grid>
+        )
+    }
+
+    const renderRoot = () => {
+        return (
             <Grid container className = {classes.root}>
                 <Grid item xs = {10} md = {11}>
                     { renderSecondaryUser() }
@@ -72,6 +105,12 @@ const Header = ({
                     { renderSettingBlog() }
                 </Grid>
             </Grid>
+        )
+    }
+
+    return (
+        <div className = "chat_header_root">
+            { selectedChatItem ? renderRoot() : renderSkeletonRoot() }
         </div>
     )
 }
