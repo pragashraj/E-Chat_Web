@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
+import SockJsClient from 'react-stomp'
 
 import { Box, Grid } from '@mui/material'
 
@@ -15,33 +16,106 @@ class Home extends Component {
     state = {
         searchValue: "",
         messageValue: "",
-        selectedChatItem: {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
+        selectedChatItem: null,
         showEmojiPicker: false,
         chosenEmoji: null,
         anchorEl: null,
-        openSearchModalForMobile: false
+        openSearchModalForMobile: false,
+        broadcasts: [],
+        joinedUsers: [],
+        connected: false,
+        selectedChatListType: "My chats",
+        myChats: [],
+        chatListItems: [],
+        chatMessages: []
     }
-
-    dummyList = [
-        {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
-        {id: "2", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
-        {id: "3", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
-        {id: "4", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
-        {id: "5", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
-        {id: "6", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
-        {id: "7", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
-    ]
 
     dummyChats = [
         {id: "1", owner: "own", message: "Hello there, how are you", dateTime: "10:25"},
-        {id: "2", owner: "op", message: "I'm fine", dateTime: "10:40"},
-        {id: "3", owner: "op", message: "And you?", dateTime: "10:42"},
     ]
+
+    onConnected = () => {
+        this.setState({ connected: true })
+        const user = this.props.authResponse
+        if (this.clientRef) {
+            this.clientRef.sendMessage('/app/addUser', JSON.stringify({
+                sender: user.username,
+                type: "JOIN"
+            }))
+        }
+    }
+
+    onDisconnected = () => {
+        this.setState({ connected: false })
+    }
+
+    onMessageReceived = (payload) => {
+        var broadcasts = this.state.broadcasts
+        broadcasts.push(payload)
+        this.setState({ broadcasts })
+
+        switch (payload.type) {
+            case "JOIN": this.handleJoin(payload)
+                break
+            case "LEAVE" : this.handleLeave(payload)
+                break
+            default : return
+        }
+    }
+
+    handleJoin = (payload) => {
+        const {joinedUsers} = this.state
+        const user = this.props.authResponse
+        const sender = payload.sender
+        if (user.username !== sender) {
+            const listItem = this.createListItem(
+                joinedUsers.length.toString,
+                sender.charAt(0),
+                sender,
+                "",
+                "",
+                true
+            )
+            joinedUsers.push(listItem)
+            this.setState({ joinedUsers })
+        }
+    }
+
+    handleLeave = (payload) => {
+        const {joinedUsers} = this.state
+        const sender = payload.sender
+
+        for (let i = 0; i < joinedUsers.length; i++) {
+            const user = joinedUsers[i]
+            
+            if (user.user === sender) {
+                joinedUsers.pop(user)
+                this.setState({ joinedUsers })
+            }
+        }
+    }
+
+    createListItem = (id, avatar, user, recentMessage, dateTime, active) => {
+        const randX = Math.floor(Math.random() * 100)
+        const randY = Math.floor(Math.random() * 200)
+
+        return { id, avatar, user, recentMessage, dateTime, active, randX, randY }
+    }
+
+    sendMessage = () => {
+        const {messageValue} = this.state
+        const user = this.props.authResponse
+        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify({
+            content: messageValue,
+            sender: user.username,
+            receiver: "Steve"
+        }))
+    }
 
     handleSendOnClick = () => {
         const {messageValue} = this.state
         if (messageValue) {
-
+            this.sendMessage()
         }
     }
 
@@ -90,12 +164,24 @@ class Home extends Component {
         this.setState({ [name]: value })
     }
 
+    handleListTypeOnChange = (e) => {
+        const value = e.target.value
+        const  {joinedUsers, myChats} = this.state
+
+        let data = joinedUsers
+        if (value === "My chats") {
+            data = myChats
+        }
+
+        this.setState({ selectedChatListType: value, chatListItems: data })
+    }
+
     handleMenuClose = () => {
         this.setState({ anchorEl: null })
     }
 
     renderCardRight = () => {
-        const {messageValue, selectedChatItem, showEmojiPicker, anchorEl} = this.state
+        const {messageValue, selectedChatItem, showEmojiPicker, anchorEl, chatMessages} = this.state
         return (
             <div className = "card_right_content">
                 <div className = "card_right_header">
@@ -109,7 +195,7 @@ class Home extends Component {
                     />
                 </div>
                 <div className = "card_right_body">
-                    <Chat chats = {this.dummyChats}/>
+                    <Chat chats = {chatMessages}/>
                 </div>
                 <div className = "card_right_footer">
                     <Footer
@@ -126,17 +212,19 @@ class Home extends Component {
     }
 
     renderCardLeft = () => {
-        const {searchValue} = this.state
+        const {searchValue, chatListItems, selectedChatListType} = this.state
         return (
             <div className = "card_left_content">
                 <Aside 
-                    chatList = {this.dummyList} 
-                    searchValue = {searchValue} 
+                    chatList = {chatListItems} 
+                    searchValue = {searchValue}
+                    selectedChatListType = {selectedChatListType} 
                     handleInputOnChange = {this.handleInputOnChange}
                     handleChatListItemOnClick = {this.handleChatListItemOnClick}
                     handleSearchOnClick = {this.handleSearchOnClick}
                     handleSearchModalOnClick = {this.handleSearchModalOnClick}
                     handleCancelOnClick = {this.handleCancelOnClick}
+                    handleListTypeOnChange = {this.handleListTypeOnChange}
                 />
             </div>
         )
@@ -163,13 +251,23 @@ class Home extends Component {
 
     renderChatBody = () => {
         return (
-            <Box>
-                <Grid container spacing = {2}>
-                    <Grid item xs = {12}>
-                        { this.renderChatCard() }
-                    </Grid>
+            <Grid container spacing = {2}>
+                <Grid item xs = {12}>
+                    { this.renderChatCard() }
                 </Grid>
-            </Box>
+            </Grid>
+        )
+    }
+
+    renderSockJsClient = () => {
+        return (
+            <SockJsClient url = 'http://localhost:9000/ws/'
+                topics = {['/topic/public']}
+                onConnect = {this.onConnected}
+                onDisconnect = {this.onDisconnected}
+                onMessage = {this.onMessageReceived}
+                ref = {(client) => { this.clientRef = client }}
+            />
         )
     }
 
@@ -177,8 +275,11 @@ class Home extends Component {
         return (
             <div className = "home_root">
                 <div className = "chat_body">
-                    { this.renderChatBody() }
+                    <Box> 
+                        { this.renderChatBody() } 
+                    </Box>
                 </div>
+                { this.renderSockJsClient() }
             </div>
         )
     }

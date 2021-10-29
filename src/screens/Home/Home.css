@@ -132,6 +132,7 @@
 
 .footer_input {
     width: 100%;
+    margin-left: 5px;
 }
 
 .chat_list_body_root {
@@ -148,15 +149,15 @@
 
 .message_type_1 {
     display: flex;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     align-items: center;
     justify-content: flex-end;
 }
 
 .message_type_2 {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     display: flex;
 }
 
@@ -176,6 +177,12 @@
     color: honeydew;
     font-size: 0.7rem;
     margin-left: 5px;
+}
+
+.aside_choicer {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 @media screen and (max-width: 600px) {

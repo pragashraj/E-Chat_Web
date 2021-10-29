@@ -33,13 +33,12 @@ const useStyles = makeStyles({
 
 const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
     const classes = useStyles()
-    const rand = Math.floor(Math.random() * 100)
 
     const renderMobileView = () => {
         return (
             <ListItemButton onClick = {() => handleChatListItemOnClick(listItem)}>
                 <ListItemAvatar className = {classes.mobileListItem}>
-                    <Avatar sx = {{ bgcolor: `rgb(${rand}, ${rand}, 0)` }} className = {classes.mobileItemAvatar}>
+                    <Avatar sx = {{ bgcolor: `rgb(${listItem.randX}, ${listItem.randY}, 0)` }} className = {classes.mobileItemAvatar}>
                         {listItem.avatar}
                     </Avatar>
                     <span className = {classes.mobileDateTime}>{listItem.dateTime}</span>
@@ -52,7 +51,7 @@ const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
         return (
             <ListItemButton onClick = {() => handleChatListItemOnClick(listItem)}>
                 <ListItemAvatar>
-                    <Avatar sx = {{ bgcolor: `rgba(${rand}, 132, 73)` }}>{listItem.avatar}</Avatar>
+                    <Avatar sx = {{ bgcolor: `rgba(${listItem.randX}, ${listItem.randY}, 73)` }}>{listItem.avatar}</Avatar>
                 </ListItemAvatar>
                 <ListItemText primary = {listItem.user} secondary = {listItem.recentMessage} sx = {{color: "rgba(255, 255, 255, 0.7)"}}/> 
                 <span className = {classes.dateTime}>{listItem.dateTime}</span>
