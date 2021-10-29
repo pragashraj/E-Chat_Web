@@ -9,7 +9,6 @@ import Header from './Header'
 import Footer from './Footer'
 import Chat from './Chat'
 import {logout} from '../../redux/actions/authAction'
-import {createStompClient} from '../../utils/stompClient'
 
 import './Home.css'
 
@@ -41,39 +40,26 @@ class Home extends Component {
         {id: "3", owner: "op", message: "And you?", dateTime: "10:42"},
     ]
 
-    stompClient = null
-
-    componentDidMount() {
-        const user = this.props.authResponse
-        if (user) {
-            this.stompClient = createStompClient()
-            this.stompClient.connect({}, this.onConnected, this.onError)
-        } 
-        else {
-            this.props.logout()
-        }
-    }
-
     onConnected = () => {
-        const user = this.props.authResponse
-        this.stompClient.subscribe('/topic/pubic', this.onMessageReceived)
-        this.stompClient.send("/app/addUser", {}, JSON.stringify({ sender: user.username, type: 'JOIN' }))
+        console.log("connected")
     }
 
-    onError = () => {
-        
+    onDisconnected = () => {
+        console.log("disconnected")
     }
 
     onMessageReceived = (payload) => {
-        var message = JSON.parse(payload.body)
-        console.log(message)
+        var messages = this.state.messages
+        messages.push(payload)
+        this.setState({ messages })
     }
 
     sendMessage = () => {
         const {messageValue} = this.state
-        this.stompClient.send('/app/sendMessage', {}, JSON.stringify({
+        const user = this.props.authResponse
+        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify({
             content: messageValue,
-            sender: "Kamal",
+            sender: user.username,
             receiver: "Steve"
         }))
     }
@@ -213,15 +199,11 @@ class Home extends Component {
 
     renderSockJsClient = () => {
         return (
-            <SockJsClient url = 'http://localhost:8080/ws/'
+            <SockJsClient url = 'http://localhost:9000/ws/'
                 topics = {['/topic/public']}
-                onConnect = {() => { console.log("connected") }}
-                onDisconnect = {() => { console.log("Disconnected") }}
-                onMessage = {(msg) => {
-                    var messages = this.state.messages
-                    messages.push(msg)
-                    this.setState({ messages })
-                }}
+                onConnect = {this.onConnected}
+                onDisconnect = {this.onDisconnected}
+                onMessage = {this.onMessageReceived}
                 ref = {(client) => { this.clientRef = client }}
             />
         )
@@ -235,6 +217,7 @@ class Home extends Component {
                         { this.renderChatBody() } 
                     </Box>
                 </div>
+                { this.renderSockJsClient() }
             </div>
         )
     }
