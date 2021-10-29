@@ -21,18 +21,10 @@ class Home extends Component {
         chosenEmoji: null,
         anchorEl: null,
         openSearchModalForMobile: false,
-        messages: []
+        broadcasts: [],
+        joinedUsers: [],
+        connected: false
     }
-
-    dummyList = [
-        {id: "1", avatar: "S", user: "Steve Rogers", recentMessage: "Hi there", dateTime: "10:27"},
-        {id: "2", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
-        {id: "3", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
-        {id: "4", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
-        {id: "5", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
-        {id: "6", avatar: "P", user: "Palemo", recentMessage: "See you later", dateTime: "16:03"},
-        {id: "7", avatar: "R", user: "Rogers", recentMessage: "Good Night", dateTime: "20:45"},
-    ]
 
     dummyChats = [
         {id: "1", owner: "own", message: "Hello there, how are you", dateTime: "10:25"},
@@ -41,7 +33,14 @@ class Home extends Component {
     ]
 
     onConnected = () => {
-        console.log("connected")
+        this.setState({ connected: true })
+        const user = this.props.authResponse
+        if (this.clientRef) {
+            this.clientRef.sendMessage('/app/addUser', JSON.stringify({
+                sender: user.username,
+                type: "JOIN"
+            }))
+        }
     }
 
     onDisconnected = () => {
@@ -49,9 +48,56 @@ class Home extends Component {
     }
 
     onMessageReceived = (payload) => {
-        var messages = this.state.messages
-        messages.push(payload)
-        this.setState({ messages })
+        var broadcasts = this.state.broadcasts
+        broadcasts.push(payload)
+        this.setState({ broadcasts })
+
+        switch (payload.type) {
+            case "JOIN": this.handleJoin(payload)
+                break
+            case "LEAVE" : this.handleLeave(payload)
+                break
+            default : return
+        }
+    }
+
+    handleJoin = (payload) => {
+        const {joinedUsers} = this.state
+        const user = this.props.authResponse
+        const sender = payload.sender
+        if (user.username !== sender) {
+            const listItem = this.createListItem(
+                joinedUsers.length.toString,
+                sender.charAt(0),
+                sender,
+                "",
+                "",
+                true
+            )
+            joinedUsers.push(listItem)
+            this.setState({ joinedUsers })
+        }
+    }
+
+    handleLeave = (payload) => {
+        const {joinedUsers} = this.state
+        const sender = payload.sender
+
+        for (let i = 0; i < joinedUsers.length; i++) {
+            const user = joinedUsers[i]
+            
+            if (user.user === sender) {
+                joinedUsers.pop(user)
+                this.setState({ joinedUsers })
+            }
+        }
+    }
+
+    createListItem = (id, avatar, user, recentMessage, dateTime, active) => {
+        const randX = Math.floor(Math.random() * 100)
+        const randY = Math.floor(Math.random() * 200)
+
+        return { id, avatar, user, recentMessage, dateTime, active, randX, randY }
     }
 
     sendMessage = () => {
@@ -152,11 +198,11 @@ class Home extends Component {
     }
 
     renderCardLeft = () => {
-        const {searchValue} = this.state
+        const {searchValue, joinedUsers} = this.state
         return (
             <div className = "card_left_content">
                 <Aside 
-                    chatList = {this.dummyList} 
+                    chatList = {joinedUsers} 
                     searchValue = {searchValue} 
                     handleInputOnChange = {this.handleInputOnChange}
                     handleChatListItemOnClick = {this.handleChatListItemOnClick}
