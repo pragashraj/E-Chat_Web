@@ -6,7 +6,7 @@ const EmojiPicker = ({handleEmojiOnSelect, desktopView}) => {
     const width = !desktopView && "200px"
     return (
         <Picker
-            onEmojiClick={(e, emojiObject) => handleEmojiOnSelect(e, emojiObject)}
+            onEmojiClick = {(e, emojiObject) => handleEmojiOnSelect(e, emojiObject)}
             disableAutoFocus = {true}
             skinTone = {SKIN_TONE_LIGHT}
             groupNames = {{ smileys_people: "PEOPLE" }}
