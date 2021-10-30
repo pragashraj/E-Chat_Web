@@ -38,10 +38,8 @@ class Home extends Component {
         this.setState({ connected: true })
         const user = this.props.authResponse
         if (this.clientRef) {
-            this.clientRef.sendMessage('/app/addUser', JSON.stringify({
-                sender: user.username,
-                type: "JOIN"
-            }))
+            const data = { sender: user.username, type: "JOIN" }
+            this.clientRef.sendMessage('/app/addUser', JSON.stringify(data))
         }
     }
 
@@ -68,14 +66,7 @@ class Home extends Component {
         const user = this.props.authResponse
         const sender = payload.sender
         if (user.username !== sender) {
-            const listItem = this.createListItem(
-                joinedUsers.length.toString,
-                sender.charAt(0),
-                sender,
-                "",
-                "",
-                true
-            )
+            const listItem = this.createListItem(joinedUsers.length.toString, sender.charAt(0), sender, "", "", true)
             joinedUsers.push(listItem)
             this.setState({ joinedUsers })
         }
@@ -103,18 +94,15 @@ class Home extends Component {
     }
 
     sendMessage = () => {
-        const {messageValue} = this.state
+        const {messageValue, selectedChatItem} = this.state
         const user = this.props.authResponse
-        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify({
-            content: messageValue,
-            sender: user.username,
-            receiver: "Steve"
-        }))
+        const data = {content: messageValue, sender: user.username, receiver: selectedChatItem.user}
+        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
     }
 
     handleSendOnClick = () => {
-        const {messageValue} = this.state
-        if (messageValue) {
+        const {messageValue, selectedChatItem} = this.state
+        if (selectedChatItem && messageValue) {
             this.sendMessage()
         }
     }
