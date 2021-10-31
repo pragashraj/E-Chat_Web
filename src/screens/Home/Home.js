@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import SockJsClient from 'react-stomp'
 
-import { Box, Grid } from '@mui/material'
+import { Box, Grid, Fab } from '@mui/material'
+import ExitToApp from '@mui/icons-material/ExitToApp'
 
 import Aside from './Aside'
 import Header from './Header'
 import Footer from './Footer'
 import Chat from './Chat'
+import Alert from '../../components/Alert'
 import {logout} from '../../redux/actions/authAction'
 
 import './Home.css'
@@ -27,7 +29,8 @@ class Home extends Component {
         selectedChatListType: "My chats",
         myChats: [],
         chatListItems: [],
-        chatMessages: []
+        chatMessages: [],
+        openAlert: false
     }
 
     dummyChats = [
@@ -134,6 +137,10 @@ class Home extends Component {
         this.setState({ selectedChatItem: item })
     }
 
+    handleOpenAlert = () => {
+        this.setState({ openAlert: !this.state.openAlert })
+    }
+
     handleEmojiOnSelect = (e, emoji) => {
         this.handleEmojiOnClick()
         this.setState({ chosenEmoji: emoji })
@@ -166,6 +173,37 @@ class Home extends Component {
 
     handleMenuClose = () => {
         this.setState({ anchorEl: null })
+    }
+
+    handleLogout = () => {
+        this.handleOpenAlert()
+        this.props.logout()
+        this.props.history.push("/")
+    }
+
+    renderAlertPopup = () => {
+        const {openAlert} = this.state
+        return (
+            <Alert
+                content = "Are you sure to logout?"
+                open = {openAlert}
+                handleConfirm = {this.handleLogout}
+                handleClose = {this.handleOpenAlert}
+            />
+        )
+    }
+
+    renderFab = () => {
+        return (
+            <Fab 
+                color = "secondary" 
+                aria-label = "logour" 
+                sx = {{bottom: "20px", position: "absolute", right: "20px"}}
+                onClick = {this.handleOpenAlert}
+            >
+                <ExitToApp/>
+            </Fab>
+        )
     }
 
     renderCardRight = () => {
@@ -260,6 +298,7 @@ class Home extends Component {
     }
 
     render() {
+        const {openAlert} = this.state
         return (
             <div className = "home_root">
                 <div className = "chat_body">
@@ -267,6 +306,8 @@ class Home extends Component {
                         { this.renderChatBody() } 
                     </Box>
                 </div>
+                { this.renderFab() }
+                { openAlert && this.renderAlertPopup() }
                 { this.renderSockJsClient() }
             </div>
         )

@@ -29,6 +29,7 @@ class SignIn extends Component {
             if (response) {
                 this.props.storeLoginResponse(response)
             }
+            this.props.history.push("/home")
             this.setState({ loading: false, username: "", password: "" })
         } 
         catch (err) {
