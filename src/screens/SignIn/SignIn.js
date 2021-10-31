@@ -6,6 +6,7 @@ import { Box, Grid, CssBaseline  } from '@mui/material'
 import Form from './Form'
 import SnackBar from '../../components/SnackBar'
 import {storeLoginResponse} from '../../redux/actions/authAction'
+import {signIn} from '../../api/auth'
 
 import './SignIn.css'
 import loginCover from '../../assets/images/connect.jpg'
@@ -16,14 +17,29 @@ class SignIn extends Component {
         password: "",
         showSnackBar: false, 
         snackMessage: "", 
-        severity: ""
+        severity: "",
+        loading: false
+    }
+
+    handleSignIn = async(data) => {
+        try {
+            this.setState({ loading: false })
+            const response = await signIn(data)
+            if (response) {
+                this.props.storeLoginResponse(response)
+            }
+            this.setState({ loading: false, username: "", password: "" })
+        } 
+        catch (err) {
+            this.setSnackBar(err.message, "error")
+        }
     }
 
     handleSubmitOnClick = () => {
         const {username, password} = this.state
         if (username && password) {
-            const data = {username}
-            this.props.storeLoginResponse(data)
+            const data = {username, password}
+            this.handleSignIn(data)
         } 
         else {
             this.setSnackBar("Fields cannot be empty", "error")
