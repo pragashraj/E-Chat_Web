@@ -4,6 +4,7 @@ import { Box, Grid, CssBaseline  } from '@mui/material'
 
 import Form from './Form'
 import SnackBar from '../../components/SnackBar'
+import Loading from '../../components/Loading/Loading'
 import {signUp} from '../../api/auth'
 
 import './SignUp.css'
@@ -112,7 +113,7 @@ class SignUp extends Component {
     }
 
     render() {
-        const { showSnackBar } = this.state
+        const { showSnackBar, loading } = this.state
         return (
             <div className = "signUp_root">
                 <div className = "signUp_body">
@@ -123,6 +124,7 @@ class SignUp extends Component {
                     </Box>
                 </div>
                 { showSnackBar && this.renderSnackBar() }
+                { loading && <Loading open = {loading}/> }
             </div>
         )
     }
