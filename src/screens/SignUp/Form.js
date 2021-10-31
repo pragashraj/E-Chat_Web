@@ -6,11 +6,13 @@ import SecondaryButton from '../../components/SecondaryButton'
 
 import {Login} from '@mui/icons-material' 
 
-import './SignIn.css'
+import './SignUp.css'
 
 const Form = ({
+    email,
     username, 
-    password, 
+    password,
+    confirmPassword, 
     handleInputOnChange,
     handleCancelOnClick,
     handleSubmitOnClick
@@ -19,7 +21,7 @@ const Form = ({
     const renderHeader = () => {
         return (
             <div className = "form_header">
-                <span className = "form_header_title">Sign In</span>
+                <span className = "form_header_title">Sign Up</span>
                 <Login sx = {{ color: "#fff", width: "30px", height: "30px"}}/>
             </div>
         )
@@ -40,10 +42,10 @@ const Form = ({
         )
     }
 
-    const renderForgotPassword = () => {
+    const renderSignInLink = () => {
         return (
-            <div className = "form_forgot_password_root">
-                <span className = "form_forgot_password">Forgot password ?</span>
+            <div className = "form_signin-link_root">
+                <a href = "/" className = "signin_link">Already have an account ?</a>
             </div>
         )
     }
@@ -59,22 +61,15 @@ const Form = ({
         )
     }
 
-    const renderSignUpLink = () => {
-        return (
-            <div className = "form_signup-link_root">
-                <a href = "/sign-up" className = "signup_link">Don't have any account ?</a>
-            </div>
-        )
-    }
-
     return (
         <div className = "form_root">
             { renderHeader() }
+            { renderInput("Email", "email", email) }
             { renderInput("Username", "username", username) }
             { renderInput("Password", "password", password, "password") }
-            { renderForgotPassword() }
+            { renderInput("Confirm Password", "confirmPassword", confirmPassword, "password") }
             { renderButtons() }
-            { renderSignUpLink() }
+            { renderSignInLink() }
         </div>
     )
 }

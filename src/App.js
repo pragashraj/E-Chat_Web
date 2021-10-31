@@ -1,20 +1,23 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
 
-import Home from './screens/Home/Home'
-import SignIn from './screens/SignIn/SignIn'
+import routes from './routes/routes'
 
-const App = ({authResponse}) => {
+const App = () => {
     return (
         <div className = "App">
-            { authResponse ? <Home/> : <SignIn/> }
+            <BrowserRouter>
+                <Switch>
+                    { routes.data.map((route,i) => <Route 
+                            path = {route.path} 
+                            component = {route.component} key = {i}
+                            exact = {route.type === "main"}
+                        />
+                    ) }
+                </Switch>
+            </BrowserRouter>
         </div>
     )
 }
 
-
-const mapStateToProps = state => ({
-    authResponse: state.auth.authResponse,
-})
-
-export default connect(mapStateToProps)(App)
+export default App
