@@ -5,6 +5,7 @@ import { Box, Grid, CssBaseline  } from '@mui/material'
 
 import Form from './Form'
 import SnackBar from '../../components/SnackBar'
+import Loading from '../../components/Loading/Loading'
 import {storeLoginResponse} from '../../redux/actions/authAction'
 import {signIn} from '../../api/auth'
 
@@ -105,7 +106,7 @@ class SignIn extends Component {
     }
 
     render() {
-        const { showSnackBar } = this.state
+        const { showSnackBar, loading } = this.state
         return (
             <div className = "signIn_root">
                 <div className = "signIn_body">
@@ -116,6 +117,7 @@ class SignIn extends Component {
                     </Box>
                 </div>
                 { showSnackBar && this.renderSnackBar() }
+                { loading && <Loading open = {loading}/> }
             </div>
         )
     }
