@@ -148,8 +148,6 @@ class Home extends Component {
 
     handleMenuItemOnPress = (item) => {
         switch(item) {
-            case "Logout" : this.props.logout()
-                break
             default: return
         }
     }
@@ -221,12 +219,16 @@ class Home extends Component {
                     />
                 </div>
                 <div className = "card_right_body">
-                    <Chat chats = {chatMessages}/>
+                    <Chat 
+                        chats = {chatMessages}
+                        selectedChatItem = {selectedChatItem}
+                    />
                 </div>
                 <div className = "card_right_footer">
                     <Footer
                         value = {messageValue}
                         showEmojiPicker = {showEmojiPicker}
+                        selectedChatItem = {selectedChatItem}
                         handleInputOnChange = {this.handleInputOnChange}
                         handleSendOnClick = {this.handleSendOnClick}
                         handleEmojiOnClick = {this.handleEmojiOnClick}

@@ -33,7 +33,7 @@ const Selector = ({menuItems, value, helperText, handleChange}) => {
                 onChange = {handleChange}
                 input = {<BootstrapInput />}
             >
-                { menuItems.map(item => <MenuItem value = {item}>{item}</MenuItem>) }
+                { menuItems.map((item, idx) => <MenuItem value = {item} key = {idx}>{item}</MenuItem>) }
             </Select>
             <FormHelperText>{helperText}</FormHelperText>
         </FormControl>
