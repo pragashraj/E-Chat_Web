@@ -33,10 +33,6 @@ class Home extends Component {
         openAlert: false
     }
 
-    dummyChats = [
-        {id: "1", owner: "own", message: "Hello there, how are you", dateTime: "10:25"},
-    ]
-
     onConnected = () => {
         this.setState({ connected: true })
         const user = this.props.authResponse
@@ -60,6 +56,8 @@ class Home extends Component {
                 break
             case "LEAVE" : this.handleLeave(payload)
                 break
+            case "CHAT": this.handleChatMessages(payload)
+                break
             default : return
         }
     }
@@ -69,9 +67,21 @@ class Home extends Component {
         const user = this.props.authResponse
         const sender = payload.sender
         if (user.username !== sender) {
-            const listItem = this.createListItem(joinedUsers.length.toString, sender.charAt(0), sender, "", "", true)
-            joinedUsers.push(listItem)
-            this.setState({ joinedUsers })
+            var existing = false
+
+            for (let i = 0; i < joinedUsers.length; i++) {
+                const existingUser = joinedUsers[i]
+                if (existingUser.user === sender) {
+                    existing = true
+                    break
+                }
+            }
+
+            if (!existing) {
+                const listItem = this.createListItem(joinedUsers.length.toString, sender.charAt(0), sender, "", "", true)
+                joinedUsers.push(listItem)
+                this.setState({ joinedUsers })
+            }
         }
     }
 
@@ -89,6 +99,14 @@ class Home extends Component {
         }
     }
 
+    handleChatMessages = (payload) => {
+
+    }
+
+    createChatMessageItem = (id, sender, reciever, message, dateTime) => {
+        return  { id, sender, reciever, message, dateTime }
+    }
+
     createListItem = (id, avatar, user, recentMessage, dateTime, active) => {
         const randX = Math.floor(Math.random() * 100)
         const randY = Math.floor(Math.random() * 200)
@@ -99,7 +117,7 @@ class Home extends Component {
     sendMessage = () => {
         const {messageValue, selectedChatItem} = this.state
         const user = this.props.authResponse
-        const data = {content: messageValue, sender: user.username, receiver: selectedChatItem.user}
+        const data = {content: messageValue, sender: user.username, receiver: selectedChatItem.user, type: "CHAT"}
         this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
     }
 
