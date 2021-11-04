@@ -103,8 +103,8 @@ class Home extends Component {
 
     }
 
-    createChatMessageItem = (id, sender, reciever, message, dateTime) => {
-        return  { id, sender, reciever, message, dateTime }
+    createChatMessageItem = (id, sender, reciever, message, dateTime, owner) => {
+        return  { id, sender, reciever, message, dateTime, owner }
     }
 
     createListItem = (id, avatar, user, recentMessage, dateTime, active) => {
@@ -115,10 +115,22 @@ class Home extends Component {
     }
 
     sendMessage = () => {
-        const {messageValue, selectedChatItem} = this.state
-        const user = this.props.authResponse
-        const data = {content: messageValue, sender: user.username, receiver: selectedChatItem.user, type: "CHAT"}
+        const {messageValue, selectedChatItem, chatMessages} = this.state
+        const username = this.props.authResponse.username
+        const data = {content: messageValue, sender: username, receiver: selectedChatItem.user, type: "CHAT"}
         this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
+
+        const rand = Math.floor(Math.random() * 100)
+        const chatMessage = this.createChatMessageItem(
+            rand, 
+            username, 
+            selectedChatItem.user, 
+            messageValue, 
+            this.getDateAndTime(new Date().toISOString()), 
+            "own"
+        )
+        chatMessages.push(chatMessage)
+        this.setState({ messageValue: "", chatMessages})
     }
 
     handleSendOnClick = () => {
@@ -195,6 +207,18 @@ class Home extends Component {
         this.handleOpenAlert()
         this.props.logout()
         this.props.history.push("/")
+    }
+
+    getDateAndTime = (date) => {
+        if (date) {
+            const dateSplits = date.split("T")
+            const timeSplits = dateSplits[1].split("Z")[0].split(".")
+
+            return dateSplits[0] + " " + timeSplits[0]
+        }
+        else {
+            return null
+        }
     }
 
     renderAlertPopup = () => {
