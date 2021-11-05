@@ -76,7 +76,7 @@ const Header = ({
                 <Avatar sx = {{ bgcolor: secondaryUserColor }}>{selectedChatItem && selectedChatItem.avatar}</Avatar>
                 <div className = "secondary_user_detail">
                     <span className = "secondary_user_name">{selectedChatItem && selectedChatItem.user}</span>
-                    <span className = "secondary_user_active">active</span>
+                    <span className = "secondary_user_active">{selectedChatItem && selectedChatItem.active && "Active"}</span>
                 </div>
             </div>
         )

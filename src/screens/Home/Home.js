@@ -23,7 +23,6 @@ class Home extends Component {
         chosenEmoji: null,
         anchorEl: null,
         openSearchModalForMobile: false,
-        broadcasts: [],
         joinedUsers: [],
         connected: false,
         selectedChatListType: "My chats",
@@ -47,10 +46,6 @@ class Home extends Component {
     }
 
     onMessageReceived = (payload) => {
-        var broadcasts = this.state.broadcasts
-        broadcasts.push(payload)
-        this.setState({ broadcasts })
-
         switch (payload.type) {
             case "JOIN": this.handleJoin(payload)
                 break
@@ -63,7 +58,7 @@ class Home extends Component {
     }
 
     handleJoin = (payload) => {
-        const {joinedUsers} = this.state
+        const {joinedUsers, myChats} = this.state
         const user = this.props.authResponse
         const sender = payload.sender
         if (user.username !== sender) {
@@ -83,6 +78,16 @@ class Home extends Component {
                 this.setState({ joinedUsers })
             }
         }
+
+        var chatList = myChats
+        for (let i = 0; i < payload.contactList.length; i++) {
+            const contact = payload.contactList[i]
+            const contactPerson = contact.contactPerson
+            const list = this.createListItem(contact.id, contactPerson.username.charAt(0), contactPerson.username, "", "", false)
+            chatList.push(list)
+        }
+
+        this.setState({ myChats: chatList, chatListItems: chatList})
     }
 
     handleLeave = (payload) => {
