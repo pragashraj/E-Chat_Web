@@ -5,8 +5,8 @@ import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles({
     root: {
-        display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        alignSelf: "flex-end"
     }
 })
 
@@ -21,7 +21,7 @@ const ChatMessage = ({avatar, message, bgcolor}) => {
 
     return (
         <div className = {classes.root}>
-            <Chip avatar = {renderAvatar()} label = {message} sx = {{bgcolor: bgcolor, color: "#fff"}}/>
+            <Chip avatar = {renderAvatar()} label = {message} sx = {{bgcolor: bgcolor, color: "#fff", paddingRight: "20px"}}/>
         </div>
     )
 }

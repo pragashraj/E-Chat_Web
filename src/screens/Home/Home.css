@@ -169,13 +169,13 @@
 .message_type_1_date {
     align-self: flex-end;
     color: honeydew;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     margin-right: 5px;
 }
 
 .message_type_2_date {
     color: honeydew;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     margin-left: 5px;
 }
 
