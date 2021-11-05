@@ -35,7 +35,7 @@ class Home extends Component {
     onConnected = () => {
         this.setState({ connected: true })
         const user = this.props.authResponse
-        if (this.clientRef) {
+        if (this.clientRef && user) {
             const data = { sender: user.username, type: "JOIN" }
             this.clientRef.sendMessage('/app/addUser', JSON.stringify(data))
         }
@@ -105,7 +105,25 @@ class Home extends Component {
     }
 
     handleChatMessages = (payload) => {
+        const currentUser = this.props.authResponse.username
+        if (payload.sender !== currentUser && payload.receiver === currentUser) {
+            const {myChats} = this.state
+            var existing = false
 
+            for (let i = 0; i < myChats.length; i++) {
+                const existingUser = myChats[i]
+                if (existingUser.user === payload.sender) {
+                    existing = true
+                    break
+                }
+            }
+
+            if (!existing) {
+                const listItem = this.createListItem(myChats.length.toString, payload.sender.charAt(0), payload.sender, "", "", true)
+                myChats.push(listItem)
+                this.setState({ myChats })
+            }
+        }
     }
 
     createChatMessageItem = (id, sender, reciever, message, dateTime, owner) => {
