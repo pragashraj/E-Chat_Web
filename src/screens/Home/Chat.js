@@ -6,7 +6,7 @@ import {Text} from '../../components/skeletons/index'
 import './Home.css'
 import {endUserColor, secondaryUserColor} from '../../values/values'
 
-const Chat = ({chats, selectedChatItem}) => {
+const Chat = ({selectedChatItem}) => {
 
     const renderMessageType1 = (item) => {
         return (
@@ -62,7 +62,10 @@ const Chat = ({chats, selectedChatItem}) => {
     const renderList = () => {
         return (
             <div className = "chat_list_body">
-                { chats.map(item => item.owner === "own" ? renderMessageType1(item) : renderMessageType2(item)) }
+                { 
+                    selectedChatItem && selectedChatItem.messages.map(item => 
+                    item.owner === "own" ? renderMessageType1(item) : renderMessageType2(item)) 
+                }
             </div>
         )
     }
