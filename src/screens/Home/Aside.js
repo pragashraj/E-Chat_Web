@@ -33,7 +33,8 @@ const Aside = ({
     handleSearchOnClick,
     handleSearchModalOnClick,
     handleCancelOnClick,
-    handleListTypeOnChange
+    handleListTypeOnChange,
+    currentUser
 }) => {
     const matches = useMediaQuery('(min-width:800px)')
     const classes = useStyles({desktopView: matches})
@@ -69,6 +70,7 @@ const Aside = ({
                         handleSearchOnClick = {handleSearchOnClick}
                         handleSearchModalOnClick = {handleSearchModalOnClick}
                         handleCancelOnClick = {handleCancelOnClick}
+                        currentUser = {currentUser}
                     />
                 </Grid>
             </Grid>

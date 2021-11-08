@@ -32,7 +32,7 @@ const StyledAvatar = styled(Badge)(({ theme }) => ({
     },
 }))
 
-const StyledBadge = ({bgColor, desktopView}) => {
+const StyledBadge = ({bgColor, desktopView, avatar}) => {
     const res = desktopView ? 32 : 20
     const size = desktopView ? "17px" : "10px" 
     
@@ -42,7 +42,7 @@ const StyledBadge = ({bgColor, desktopView}) => {
             anchorOrigin = {{ vertical: 'bottom', horizontal: 'right' }}
             variant = "dot"
         >
-            <Avatar sx = {{ bgcolor: bgColor, width: res, height: res, fontSize: size }}>P</Avatar>
+            <Avatar sx = {{ bgcolor: bgColor, width: res, height: res, fontSize: size }}>{avatar}</Avatar>
         </StyledAvatar>
     )
 }

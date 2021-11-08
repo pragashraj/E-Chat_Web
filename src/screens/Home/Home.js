@@ -97,7 +97,7 @@ class Home extends Component {
                 "", 
                 "", 
                 false, 
-                payload.messages ? payload.messages : []
+                contact.messages ? contact.messages : []
             )
             chatList.push(list)
         }
@@ -294,6 +294,7 @@ class Home extends Component {
 
     renderCardRight = () => {
         const {messageValue, selectedChatItem, showEmojiPicker, anchorEl} = this.state
+        const user = this.props.authResponse
         return (
             <div className = "card_right_content">
                 <div className = "card_right_header">
@@ -307,7 +308,7 @@ class Home extends Component {
                     />
                 </div>
                 <div className = "card_right_body">
-                    <Chat selectedChatItem = {selectedChatItem}/>
+                    <Chat selectedChatItem = {selectedChatItem} currentUser = {user}/>
                 </div>
                 <div className = "card_right_footer">
                     <Footer
@@ -326,6 +327,7 @@ class Home extends Component {
 
     renderCardLeft = () => {
         const {searchValue, chatListItems, selectedChatListType} = this.state
+        const user = this.props.authResponse
         return (
             <div className = "card_left_content">
                 <Aside 
@@ -338,6 +340,7 @@ class Home extends Component {
                     handleSearchModalOnClick = {this.handleSearchModalOnClick}
                     handleCancelOnClick = {this.handleCancelOnClick}
                     handleListTypeOnChange = {this.handleListTypeOnChange}
+                    currentUser = {user}
                 />
             </div>
         )
