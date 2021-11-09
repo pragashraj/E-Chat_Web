@@ -23,9 +23,9 @@ class Home extends Component {
         chosenEmoji: null,
         anchorEl: null,
         openSearchModalForMobile: false,
-        joinedUsers: [],
         connected: false,
         selectedChatListType: "My chats",
+        onlineUsers: [],
         myChats: [],
         chatListItems: [],
         openAlert: false
@@ -57,15 +57,15 @@ class Home extends Component {
     }
 
     handleJoin = (payload) => {
-        const {joinedUsers, myChats} = this.state
-        const user = this.props.authResponse
-        const sender = payload.sender
-        if (user.username !== sender) {
+        const {onlineUsers, myChats} = this.state
+        const username = this.props.authResponse.username
+        const joiner = payload.username
+        if (username !== joiner) {
             var existing = false
 
-            for (let i = 0; i < joinedUsers.length; i++) {
-                const existingUser = joinedUsers[i]
-                if (existingUser.user === sender) {
+            for (let i = 0; i < onlineUsers.length; i++) {
+                const existingUser = onlineUsers[i]
+                if (existingUser.username === joiner) {
                     existing = true
                     break
                 }
@@ -73,48 +73,45 @@ class Home extends Component {
 
             if (!existing) {
                 const listItem = this.createListItem(
-                    joinedUsers.length.toString, 
-                    sender.charAt(0), 
-                    sender, 
-                    "", 
-                    "", 
-                    true, 
-                    payload.messages ? payload.messages : []
+                    onlineUsers.length.toString,
+                    joiner.charAt(0),
+                    joiner,
+                    true,
+                    []
                 )
-                joinedUsers.push(listItem)
-                this.setState({ joinedUsers })
+                onlineUsers.push(listItem)
+                this.setState({ onlineUsers })
             }
-        }
+        } 
+        else {
+            const myChatList = payload.myChatList
+            for (let i = 0; i < myChatList.length; i++) {
+                const myChat = myChatList[i]
+                const personName = myChat.personName
+                const item = this.createListItem(
+                    myChat.id,
+                    personName.charAt(0),
+                    personName,
+                    false,
+                    myChat.chatList
+                )
+                myChats.push(item)
+            }
 
-        var chatList = myChats
-        for (let i = 0; i < payload.contactList.length; i++) {
-            const contact = payload.contactList[i]
-            const contactPerson = contact.contactPerson
-            const list = this.createListItem(
-                contact.id, 
-                contactPerson.username.charAt(0), 
-                contactPerson.username, 
-                "", 
-                "", 
-                false, 
-                contact.messages ? contact.messages : []
-            )
-            chatList.push(list)
+            this.setState({ myChats, chatListItems: myChats})
         }
-
-        this.setState({ myChats: chatList, chatListItems: chatList})
     }
 
     handleLeave = (payload) => {
-        const {joinedUsers} = this.state
-        const sender = payload.sender
+        const {onlineUsers} = this.state
+        const username = payload.username
 
-        for (let i = 0; i < joinedUsers.length; i++) {
-            const user = joinedUsers[i]
+        for (let i = 0; i < onlineUsers.length; i++) {
+            var onlineUser = onlineUsers[i]
             
-            if (user.user === sender) {
-                joinedUsers.pop(user)
-                this.setState({ joinedUsers })
+            if (onlineUser.username === username) {
+                onlineUsers.pop(onlineUser)
+                this.setState({ onlineUsers })
             }
         }
     }
@@ -153,11 +150,11 @@ class Home extends Component {
         return  { id, sender, reciever, message, dateTime, owner }
     }
 
-    createListItem = (id, avatar, user, recentMessage, dateTime, active, messages) => {
+    createListItem = (id, avatar, username, active, chats) => {
         const randX = Math.floor(Math.random() * 100)
         const randY = Math.floor(Math.random() * 200)
 
-        return { id, avatar, user, recentMessage, dateTime, active, randX, randY, messages }
+        return { id, avatar, username, active, randX, randY, chats }
     }
 
     sendMessage = () => {
@@ -235,9 +232,9 @@ class Home extends Component {
 
     handleListTypeOnChange = (e) => {
         const value = e.target.value
-        const  {joinedUsers, myChats} = this.state
+        const  {onlineUsers, myChats} = this.state
 
-        let data = joinedUsers
+        let data = onlineUsers
         if (value === "My chats") {
             data = myChats
         }
@@ -327,7 +324,7 @@ class Home extends Component {
 
     renderCardLeft = () => {
         const {searchValue, chatListItems, selectedChatListType} = this.state
-        const user = this.props.authResponse
+        const currentUser = this.props.authResponse
         return (
             <div className = "card_left_content">
                 <Aside 
@@ -340,7 +337,7 @@ class Home extends Component {
                     handleSearchModalOnClick = {this.handleSearchModalOnClick}
                     handleCancelOnClick = {this.handleCancelOnClick}
                     handleListTypeOnChange = {this.handleListTypeOnChange}
-                    currentUser = {user}
+                    currentUser = {currentUser}
                 />
             </div>
         )

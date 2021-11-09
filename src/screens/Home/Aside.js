@@ -45,9 +45,9 @@ const Aside = ({
                 <Grid item xs = {12}>
                     <List className = {classes.list}>
                         { chatList.map(item => {
-                            return <ChatListItem 
-                                listItem = {item} 
-                                key = {item.id} 
+                            return <ChatListItem
+                                listItem = {item}
+                                key = {item.id}
                                 desktopView = {matches}
                                 handleChatListItemOnClick = {handleChatListItemOnClick}
                             />
@@ -62,9 +62,9 @@ const Aside = ({
         return (
             <Grid container>
                 <Grid item xs = {12}>
-                    <InputHeader 
-                        placeholder = "Search" 
-                        desktopView = {matches} 
+                    <InputHeader
+                        placeholder = "Search"
+                        desktopView = {matches}
                         value = {searchValue}
                         handleInputOnChange = {handleInputOnChange}
                         handleSearchOnClick = {handleSearchOnClick}
@@ -84,8 +84,8 @@ const Aside = ({
             </div>
             <Divider className = {classes.divider} orientation = "horizontal" />
             <div className = "aside_choicer">
-                <Selector 
-                    menuItems = {["My chats", "Online users"]} 
+                <Selector
+                    menuItems = {["My chats", "Online users"]}
                     value = {selectedChatListType}
                     handleChange = {handleListTypeOnChange}
                 />
