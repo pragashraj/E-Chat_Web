@@ -75,7 +75,7 @@ const Header = ({
             <div className = "secondary_user_blog">
                 <Avatar sx = {{ bgcolor: secondaryUserColor }}>{selectedChatItem && selectedChatItem.avatar}</Avatar>
                 <div className = "secondary_user_detail">
-                    <span className = "secondary_user_name">{selectedChatItem && selectedChatItem.user}</span>
+                    <span className = "secondary_user_name">{selectedChatItem && selectedChatItem.username}</span>
                     <span className = "secondary_user_active">{selectedChatItem && selectedChatItem.active && "Active"}</span>
                 </div>
             </div>

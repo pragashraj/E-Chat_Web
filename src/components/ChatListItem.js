@@ -53,7 +53,7 @@ const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
                 <ListItemAvatar>
                     <Avatar sx = {{ bgcolor: `rgba(${listItem.randX}, ${listItem.randY}, 73)` }}>{listItem.avatar}</Avatar>
                 </ListItemAvatar>
-                <ListItemText primary = {listItem.user} secondary = {listItem.recentMessage} sx = {{color: "rgba(255, 255, 255, 0.7)"}}/> 
+                <ListItemText primary = {listItem.username} sx = {{color: "rgba(255, 255, 255, 0.7)"}}/> 
                 <span className = {classes.dateTime}>{listItem.dateTime}</span>
             </ListItemButton>
         )

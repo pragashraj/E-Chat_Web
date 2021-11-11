@@ -6,13 +6,22 @@ import {Text} from '../../components/skeletons/index'
 import './Home.css'
 import {endUserColor, secondaryUserColor} from '../../values/values'
 
-const Chat = ({chats, selectedChatItem}) => {
+const Chat = ({selectedChatItem, currentUser}) => {
+
+    const getAvatar = (item) => {
+        if (item.sender) {
+            return item.sender.charAt(0)
+        }
+        else {
+            return ""
+        }
+    }
 
     const renderMessageType1 = (item) => {
         return (
             <div className = "message_type_1" key = {item.id}>
                 <div className = "message_type_blog">
-                    <ChatMessage avatar = "P" message = {item.message} bgcolor = {endUserColor}/>
+                    <ChatMessage avatar = {getAvatar(item)} message = {item.message} bgcolor = {endUserColor}/>
                     <span className = "message_type_1_date">{item.dateTime}</span>
                 </div>
             </div>
@@ -23,7 +32,7 @@ const Chat = ({chats, selectedChatItem}) => {
         return (
             <div className = "message_type_2" key = {item.id}>
                 <div className = "message_type_blog">
-                    <ChatMessage avatar = "S" message = {item.message} bgcolor = {secondaryUserColor}/>
+                    <ChatMessage avatar = {getAvatar(item)} message = {item.message} bgcolor = {secondaryUserColor}/>
                     <span className = "message_type_2_date">{item.dateTime}</span>
                 </div>
             </div>
@@ -62,7 +71,9 @@ const Chat = ({chats, selectedChatItem}) => {
     const renderList = () => {
         return (
             <div className = "chat_list_body">
-                { chats.map(item => item.owner === "own" ? renderMessageType1(item) : renderMessageType2(item)) }
+                { selectedChatItem && selectedChatItem.chats.map(chat =>
+                    chat.sender === currentUser.username ? renderMessageType1(chat) : renderMessageType2(chat))
+                }
             </div>
         )
     }

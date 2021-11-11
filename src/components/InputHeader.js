@@ -38,7 +38,8 @@ const InputHeader = ({
   handleInputOnChange, 
   handleSearchOnClick,
   handleSearchModalOnClick,
-  handleCancelOnClick
+  handleCancelOnClick,
+  currentUser
 }) => {
     const classes = useStyles({desktopView: desktopView})
 
@@ -76,7 +77,7 @@ const InputHeader = ({
     return (
         <Paper component = "form" className = {classes.root}>
             <IconButton className = {classes.avatar_btn} aria-label = "menu">
-                <StyledBadge bgColor = {endUserColor} desktopView = {desktopView}/>
+                <StyledBadge bgColor = {endUserColor} desktopView = {desktopView} avatar = {currentUser ? currentUser.username.charAt(0) : "X"}/>
             </IconButton>
             { desktopView ? renderDesktopView() : renderMobileView() }
         </Paper>
