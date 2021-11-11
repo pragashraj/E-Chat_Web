@@ -57,7 +57,7 @@ class Home extends Component {
     }
 
     handleJoin = (payload) => {
-        const {onlineUsers, myChats} = this.state
+        const {onlineUsers} = this.state
         const username = this.props.authResponse.username
         const joiner = payload.username
         if (username !== joiner) {
@@ -85,6 +85,7 @@ class Home extends Component {
         } 
         else {
             const myChatList = payload.myChatList
+            var newList = []
             for (let i = 0; i < myChatList.length; i++) {
                 const myChat = myChatList[i]
                 const personName = myChat.personName
@@ -93,12 +94,12 @@ class Home extends Component {
                     personName.charAt(0),
                     personName,
                     false,
-                    myChat.chatList
+                    myChat.chats
                 )
-                myChats.push(item)
+                newList.push(item)
             }
 
-            this.setState({ myChats, chatListItems: myChats})
+            this.setState({ myChats: newList, chatListItems: newList})
         }
     }
 
@@ -118,8 +119,15 @@ class Home extends Component {
 
     handleChatMessages = (payload) => {
         const currentUser = this.props.authResponse.username
-        if (payload.sender !== currentUser && payload.receiver === currentUser) {
-            const {myChats} = this.state
+        const {selectedChatItem, myChats} = this.state
+
+        if (payload.sender === currentUser) 
+        {
+            selectedChatItem && selectedChatItem.chats.push(payload.chat)
+            this.setState({ selectedChatItem })
+        }
+        else if (payload.sender !== currentUser && payload.receiver === currentUser) 
+        {
             var existing = false
 
             for (let i = 0; i < myChats.length; i++) {
@@ -132,13 +140,11 @@ class Home extends Component {
 
             if (!existing) {
                 const listItem = this.createListItem(
-                    myChats.length.toString, 
-                    payload.sender.charAt(0), 
-                    payload.sender, 
-                    "", 
-                    "", 
-                    true, 
-                    payload.messages ? payload.messages : []
+                    myChats.length.toString,
+                    payload.sender.charAt(0),
+                    payload.sender,
+                    true,
+                    []
                 )
                 myChats.push(listItem)
                 this.setState({ myChats })
@@ -160,20 +166,9 @@ class Home extends Component {
     sendMessage = () => {
         const {messageValue, selectedChatItem} = this.state
         const username = this.props.authResponse.username
-        const data = {content: messageValue, sender: username, receiver: selectedChatItem.user, type: "CHAT"}
+        const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT"}
         this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
-
-        const rand = Math.floor(Math.random() * 100)
-        const chatMessage = this.createChatMessageItem(
-            rand, 
-            username, 
-            selectedChatItem.user, 
-            messageValue, 
-            this.getDateAndTime(new Date().toISOString()), 
-            "own"
-        )
-        selectedChatItem.messages.push(chatMessage)
-        this.setState({ messageValue: "", selectedChatItem })
+        this.setState({ messageValue: "" })
     }
 
     handleSendOnClick = () => {
