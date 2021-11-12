@@ -1,5 +1,7 @@
 import React from 'react'
 
+import moment from 'moment'
+
 import ChatMessage from '../../components/ChatMessage'
 import {Text} from '../../components/skeletons/index'
 
@@ -7,6 +9,10 @@ import './Home.css'
 import {endUserColor, secondaryUserColor} from '../../values/values'
 
 const Chat = ({selectedChatItem, currentUser}) => {
+
+    const getDateTime = (dateTime) => {
+        return moment(dateTime).format("hh:mm a")
+    }
 
     const getAvatar = (item) => {
         if (item.sender) {
@@ -22,7 +28,7 @@ const Chat = ({selectedChatItem, currentUser}) => {
             <div className = "message_type_1" key = {item.id}>
                 <div className = "message_type_blog">
                     <ChatMessage avatar = {getAvatar(item)} message = {item.message} bgcolor = {endUserColor}/>
-                    <span className = "message_type_1_date">{item.dateTime}</span>
+                    <span className = "message_type_1_date">{getDateTime(item.dateTime)}</span>
                 </div>
             </div>
         )
@@ -33,7 +39,7 @@ const Chat = ({selectedChatItem, currentUser}) => {
             <div className = "message_type_2" key = {item.id}>
                 <div className = "message_type_blog">
                     <ChatMessage avatar = {getAvatar(item)} message = {item.message} bgcolor = {secondaryUserColor}/>
-                    <span className = "message_type_2_date">{item.dateTime}</span>
+                    <span className = "message_type_2_date">{getDateTime(item.dateTime)}</span>
                 </div>
             </div>
         )

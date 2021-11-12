@@ -72,13 +72,7 @@ class Home extends Component {
             }
 
             if (!existing) {
-                const listItem = this.createListItem(
-                    onlineUsers.length.toString,
-                    joiner.charAt(0),
-                    joiner,
-                    true,
-                    []
-                )
+                const listItem = this.createListItem(onlineUsers.length.toString, joiner.charAt(0), joiner, true, [])
                 onlineUsers.push(listItem)
                 this.setState({ onlineUsers })
             }
@@ -89,13 +83,7 @@ class Home extends Component {
             for (let i = 0; i < myChatList.length; i++) {
                 const myChat = myChatList[i]
                 const personName = myChat.personName
-                const item = this.createListItem(
-                    myChat.id,
-                    personName.charAt(0),
-                    personName,
-                    false,
-                    myChat.chats
-                )
+                const item = this.createListItem(myChat.id, personName.charAt(0), personName, false, myChat.chats)
                 newList.push(item)
             }
 
@@ -253,18 +241,6 @@ class Home extends Component {
         this.handleOpenAlert()
         this.props.logout()
         this.props.history.push("/")
-    }
-
-    getDateAndTime = (date) => {
-        if (date) {
-            const dateSplits = date.split("T")
-            const timeSplits = dateSplits[1].split("Z")[0].split(".")
-
-            return dateSplits[0] + " " + timeSplits[0]
-        }
-        else {
-            return null
-        }
     }
 
     renderAlertPopup = () => {
