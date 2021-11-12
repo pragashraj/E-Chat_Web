@@ -121,31 +121,39 @@ class Home extends Component {
         const currentUser = this.props.authResponse.username
         const {selectedChatItem, myChats} = this.state
 
-        if (payload.sender === currentUser) 
+        const {sender, receiver, chat} = payload
+
+        if (sender === currentUser) 
         {
-            selectedChatItem && selectedChatItem.chats.push(payload.chat)
+            selectedChatItem && selectedChatItem.chats.push(chat)
             this.setState({ selectedChatItem })
         }
-        else if (payload.sender !== currentUser && payload.receiver === currentUser) 
+        else if (sender !== currentUser && receiver === currentUser) 
         {
             var existing = false
+            var existingMyChat = null
 
             for (let i = 0; i < myChats.length; i++) {
-                const existingUser = myChats[i]
-                if (existingUser.user === payload.sender) {
+                const existingChat = myChats[i]
+                if (existingChat.username === sender) {
                     existing = true
+                    existingMyChat = existingChat
+                    myChats.pop(existingChat)
                     break
                 }
             }
 
-            if (!existing) {
-                const listItem = this.createListItem(
-                    myChats.length.toString,
-                    payload.sender.charAt(0),
-                    payload.sender,
-                    true,
-                    []
-                )
+            if (existing && existingMyChat) 
+            {
+                existingMyChat.chats.push(chat)
+                myChats.push(existingMyChat)
+                this.setState({ myChats })
+            }
+            else 
+            {
+                var chats = []
+                chats.push(chat)
+                const listItem = this.createListItem(myChats.length.toString, sender.charAt(0), sender, true, chats)
                 myChats.push(listItem)
                 this.setState({ myChats })
             }
