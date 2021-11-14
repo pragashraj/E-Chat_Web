@@ -82,8 +82,8 @@ class Home extends Component {
             var newList = []
             for (let i = 0; i < myChatList.length; i++) {
                 const myChat = myChatList[i]
-                const personName = myChat.personName
-                const item = this.createListItem(myChat.id, personName.charAt(0), personName, false, myChat.chats)
+                const personName = myChat.secondaryContributor
+                const item = this.createListItem(myChat.id, personName && personName.charAt(0), personName, false, myChat.chats)
                 newList.push(item)
             }
 
