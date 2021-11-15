@@ -5,11 +5,11 @@ export const getEndpointWithPrefix = (endpoint) => {
 }
 
 export const signIn = (cred) => {
-    const endpoint =  getEndpointWithPrefix('sign-in');
+    const endpoint =  getEndpointWithPrefix('sign-in')
     return POST(endpoint, cred)
 }
 
 export const signUp = (cred) => {
-    const endpoint =  getEndpointWithPrefix('sign-up');
+    const endpoint =  getEndpointWithPrefix('sign-up')
     return POST(endpoint, cred)
 }

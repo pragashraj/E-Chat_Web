@@ -10,7 +10,9 @@ import Header from './Header'
 import Footer from './Footer'
 import Chat from './Chat'
 import Alert from '../../components/Alert'
+import Loading from '../../components/Loading/Loading'
 import {logout} from '../../redux/actions/authAction'
+import {searchByUsername} from '../../api/user'
 
 import './Home.css'
 
@@ -28,11 +30,27 @@ class Home extends Component {
         onlineUsers: [],
         myChats: [],
         chatListItems: [],
-        openAlert: false
+        openAlert: false,
+        searchedData: [],
+        loading: true
+    }
+
+    searchByUsernameApi = async(username) => {
+        try {
+            const token = this.props.authResponse.token
+            const response = await searchByUsername(username, token)
+            let data = []
+            if (response) {
+                data = response
+            }
+            this.setState({ loading: false, searchedData: data, searchValue: "" })
+        } catch (e) {
+            this.setState({ loading: false })
+        }
     }
 
     onConnected = () => {
-        this.setState({ connected: true })
+        this.setState({ connected: true, loading: false })
         const user = this.props.authResponse
         if (this.clientRef && user) {
             const data = { sender: user.username, type: "JOIN" }
@@ -177,7 +195,8 @@ class Home extends Component {
     handleSearchOnClick = () => {
         const {searchValue} = this.state
         if (searchValue) {
-
+            this.setState({ loading: true })
+            this.searchByUsernameApi(searchValue)
         }
     }
 
@@ -364,7 +383,7 @@ class Home extends Component {
     }
 
     render() {
-        const {openAlert} = this.state
+        const {openAlert, loading} = this.state
         return (
             <div className = "home_root">
                 <div className = "chat_body">
@@ -375,6 +394,7 @@ class Home extends Component {
                 { this.renderFab() }
                 { openAlert && this.renderAlertPopup() }
                 { this.renderSockJsClient() }
+                { loading && <Loading open = {loading}/> }
             </div>
         )
     }
