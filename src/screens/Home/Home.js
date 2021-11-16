@@ -11,6 +11,7 @@ import Footer from './Footer'
 import Chat from './Chat'
 import Alert from '../../components/Alert'
 import Loading from '../../components/Loading/Loading'
+import ConnectionError from '../../components/ConnectionError'
 import {logout} from '../../redux/actions/authAction'
 import {searchByUsername} from '../../api/user'
 
@@ -32,7 +33,8 @@ class Home extends Component {
         chatListItems: [],
         openAlert: false,
         searchedData: [],
-        loading: true
+        loading: true,
+        connectionError: false
     }
 
     searchByUsernameApi = async(username) => {
@@ -43,14 +45,14 @@ class Home extends Component {
             if (response) {
                 data = response
             }
-            this.setState({ loading: false, searchedData: data, searchValue: "" })
+            this.setState({ loading: false, searchedData: data, searchValue: "", chatListItems: data })
         } catch (e) {
             this.setState({ loading: false })
         }
     }
 
     onConnected = () => {
-        this.setState({ connected: true, loading: false })
+        this.setState({ connected: true, loading: false, connectionError: false })
         const user = this.props.authResponse
         if (this.clientRef && user) {
             const data = { sender: user.username, type: "JOIN" }
@@ -59,7 +61,11 @@ class Home extends Component {
     }
 
     onDisconnected = () => {
-        this.setState({ connected: false })
+        this.setState({ connected: false, loading: false })
+    }
+
+    onConnectFailure = () => {
+        this.setState({ connected: false, loading: false, connectionError: true })
     }
 
     onMessageReceived = (payload) => {
@@ -262,6 +268,18 @@ class Home extends Component {
         this.props.history.push("/")
     }
 
+    handleReload = () => {
+        window.location.reload(false)
+    }
+
+    renderConnctionErrorModal = (open) => {
+        return <ConnectionError 
+            open = {open}
+            handleLogout = {this.handleLogout}
+            handleReload = {this.handleReload}
+        />
+    }
+
     renderAlertPopup = () => {
         const {openAlert} = this.state
         return (
@@ -377,13 +395,14 @@ class Home extends Component {
                 onConnect = {this.onConnected}
                 onDisconnect = {this.onDisconnected}
                 onMessage = {this.onMessageReceived}
+                onConnectFailure = {this.onConnectFailure}
                 ref = {(client) => { this.clientRef = client }}
             />
         )
     }
 
     render() {
-        const {openAlert, loading} = this.state
+        const {openAlert, loading, connected, connectionError} = this.state
         return (
             <div className = "home_root">
                 <div className = "chat_body">
@@ -395,6 +414,7 @@ class Home extends Component {
                 { openAlert && this.renderAlertPopup() }
                 { this.renderSockJsClient() }
                 { loading && <Loading open = {loading}/> }
+                { !connected && connectionError && this.renderConnctionErrorModal(connectionError) }
             </div>
         )
     }
