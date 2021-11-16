@@ -34,7 +34,8 @@ const Aside = ({
     handleSearchModalOnClick,
     handleCancelOnClick,
     handleListTypeOnChange,
-    currentUser
+    currentUser,
+    menuItems
 }) => {
     const matches = useMediaQuery('(min-width:800px)')
     const classes = useStyles({desktopView: matches})
@@ -85,7 +86,7 @@ const Aside = ({
             <Divider className = {classes.divider} orientation = "horizontal" />
             <div className = "aside_choicer">
                 <Selector
-                    menuItems = {["My chats", "Online users"]}
+                    menuItems = {menuItems}
                     value = {selectedChatListType}
                     handleChange = {handleListTypeOnChange}
                 />

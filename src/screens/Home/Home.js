@@ -34,7 +34,8 @@ class Home extends Component {
         openAlert: false,
         searchedData: [],
         loading: true,
-        connectionError: false
+        connectionError: false,
+        menuItems: ["My chats", "Online users"]
     }
 
     searchByUsernameApi = async(username) => {
@@ -43,9 +44,23 @@ class Home extends Component {
             const response = await searchByUsername(username, token)
             let data = []
             if (response) {
-                data = response
+                const totalUsers = response.users
+                for (let i = 0; i < totalUsers.length; i++) {
+                    const user = totalUsers[i]
+                    const personName = user.username
+                    const item = this.createListItem(user.id, personName && personName.charAt(0), personName, false, [])
+                    data.push(item)
+                }
             }
-            this.setState({ loading: false, searchedData: data, searchValue: "", chatListItems: data })
+
+            this.setState({ 
+                loading: false, 
+                searchedData: data, 
+                searchValue: "", 
+                chatListItems: data, 
+                selectedChatListType: "Search Results",
+                menuItems: ["Search Results", "My chats", "Online users"]
+            })
         } catch (e) {
             this.setState({ loading: false })
         }
@@ -211,7 +226,12 @@ class Home extends Component {
     }
 
     handleCancelOnClick = () => {
-        this.setState({ searchValue: "" })
+        this.setState({ 
+            searchValue: "",
+            chatListItems: this.state.myChats,
+            selectedChatListType: "My chats",
+            menuItems: ["My chats", "Online users"]
+        })
     }
 
     handleSettingsOnClick = (event) => {
@@ -339,7 +359,7 @@ class Home extends Component {
     }
 
     renderCardLeft = () => {
-        const {searchValue, chatListItems, selectedChatListType} = this.state
+        const {searchValue, chatListItems, selectedChatListType, menuItems} = this.state
         const currentUser = this.props.authResponse
         return (
             <div className = "card_left_content">
@@ -354,6 +374,7 @@ class Home extends Component {
                     handleCancelOnClick = {this.handleCancelOnClick}
                     handleListTypeOnChange = {this.handleListTypeOnChange}
                     currentUser = {currentUser}
+                    menuItems = {menuItems}
                 />
             </div>
         )
