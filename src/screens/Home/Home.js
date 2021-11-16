@@ -13,7 +13,7 @@ import Alert from '../../components/Alert'
 import Loading from '../../components/Loading/Loading'
 import ConnectionError from '../../components/ConnectionError'
 import {logout} from '../../redux/actions/authAction'
-import {searchByUsername} from '../../api/user'
+import {searchByUsername, deleteUserChat} from '../../api/user'
 
 import './Home.css'
 
@@ -61,6 +61,22 @@ class Home extends Component {
                 selectedChatListType: "Search Results",
                 menuItems: ["Search Results", "My chats", "Online users"]
             })
+        } catch (e) {
+            this.setState({ loading: false })
+        }
+    }
+
+    deleteUserChatApi = async(data) => {
+        try {
+            const token = this.props.authResponse.token
+            const response = await deleteUserChat(data, token)
+
+            if (response) {
+
+            }
+
+            this.setState({ loading: false })
+
         } catch (e) {
             this.setState({ loading: false })
         }
@@ -246,6 +262,19 @@ class Home extends Component {
         this.setState({ selectedChatItem: item })
     }
 
+    handleChatOnDeleteClick = () => {
+        const {selectedChatItem} = this.state
+        if (selectedChatItem) {
+            const data = {
+                currentUser: this.props.authResponse.username,
+                secondaryContributor: selectedChatItem.username
+            }
+
+            this.setState({ loading: true })
+            this.deleteUserChatApi(data)
+        }
+    }
+
     handleOpenAlert = () => {
         this.setState({ openAlert: !this.state.openAlert })
     }
@@ -257,6 +286,8 @@ class Home extends Component {
 
     handleMenuItemOnPress = (item) => {
         switch(item) {
+            case "Delete": this.handleChatOnDeleteClick()
+                break
             default: return
         }
     }
@@ -337,7 +368,7 @@ class Home extends Component {
                         handleClose = {this.handleMenuClose}
                         handleMenuItemOnPress = {this.handleMenuItemOnPress}
                         anchorEl = {anchorEl}
-                        menuItems = {["Logout"]}
+                        menuItems = {["Delete"]}
                     />
                 </div>
                 <div className = "card_right_body">
