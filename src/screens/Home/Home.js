@@ -72,10 +72,10 @@ class Home extends Component {
             const response = await deleteUserChat(data, token)
 
             if (response) {
-
+                this.setMyChatItems(response)
             }
 
-            this.setState({ loading: false })
+            this.setState({ loading: false, selectedChatItem: null })
 
         } catch (e) {
             this.setState({ loading: false })
@@ -133,16 +133,7 @@ class Home extends Component {
             }
         } 
         else {
-            const myChatList = payload.myChatList
-            var newList = []
-            for (let i = 0; i < myChatList.length; i++) {
-                const myChat = myChatList[i]
-                const personName = myChat.secondaryContributor
-                const item = this.createListItem(myChat.id, personName && personName.charAt(0), personName, false, myChat.chats)
-                newList.push(item)
-            }
-
-            this.setState({ myChats: newList, chatListItems: newList})
+            this.setMyChatItems(payload)
         }
     }
 
@@ -220,6 +211,19 @@ class Home extends Component {
         const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT"}
         this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
         this.setState({ messageValue: "" })
+    }
+
+    setMyChatItems = (data) => {
+        const myChatList = data.myChatList
+        var newList = []
+        for (let i = 0; i < myChatList.length; i++) {
+            const myChat = myChatList[i]
+            const personName = myChat.secondaryContributor
+            const item = this.createListItem(myChat.id, personName && personName.charAt(0), personName, false, myChat.chats)
+            newList.push(item)
+        }
+
+        this.setState({ myChats: newList, chatListItems: newList})
     }
 
     handleSendOnClick = () => {
