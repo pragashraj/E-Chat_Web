@@ -226,7 +226,7 @@ class Home extends Component {
         const {messageValue, selectedChatItem} = this.state
         if (selectedChatItem && messageValue) {
             const username = this.props.authResponse.username
-            const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT"}
+            const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT", contentType: "STANDARD"}
             this.sendMessage(data)
             this.setState({ messageValue: "" })
         }
@@ -285,9 +285,9 @@ class Home extends Component {
     handleEmojiOnSelect = (e, emojiObj) => {
         const {selectedChatItem} = this.state
         if(emojiObj && selectedChatItem) {
-            const {emoji, names} = emojiObj
+            const {emoji} = emojiObj
             const username = this.props.authResponse.username
-            const data = {content: names[1], sender: username, receiver: selectedChatItem.username, type: "CHAT", contentType: "EMOJI"}
+            const data = {content: emoji, sender: username, receiver: selectedChatItem.username, type: "CHAT", contentType: "EMOJI"}
             this.sendMessage(data)
             this.setState({ chosenEmoji: emojiObj })
             this.handleEmojiOnClick()
