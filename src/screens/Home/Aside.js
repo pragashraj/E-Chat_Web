@@ -45,10 +45,10 @@ const Aside = ({
             <Grid container>
                 <Grid item xs = {12}>
                     <List className = {classes.list}>
-                        { chatList.map(item => {
+                        { chatList.map((item, idx) => {
                             return <ChatListItem
                                 listItem = {item}
-                                key = {item.id}
+                                key = {idx}
                                 desktopView = {matches}
                                 handleChatListItemOnClick = {handleChatListItemOnClick}
                             />

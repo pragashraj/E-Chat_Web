@@ -91,6 +91,10 @@ class Home extends Component {
         }
     }
 
+    sendMessage = (data) => {
+        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
+    }
+
     onDisconnected = () => {
         this.setState({ connected: false, loading: false })
     }
@@ -205,14 +209,6 @@ class Home extends Component {
         return { id, avatar, username, active, randX, randY, chats }
     }
 
-    sendMessage = () => {
-        const {messageValue, selectedChatItem} = this.state
-        const username = this.props.authResponse.username
-        const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT"}
-        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
-        this.setState({ messageValue: "" })
-    }
-
     setMyChatItems = (data) => {
         const myChatList = data.myChatList
         var newList = []
@@ -229,7 +225,10 @@ class Home extends Component {
     handleSendOnClick = () => {
         const {messageValue, selectedChatItem} = this.state
         if (selectedChatItem && messageValue) {
-            this.sendMessage()
+            const username = this.props.authResponse.username
+            const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT"}
+            this.sendMessage(data)
+            this.setState({ messageValue: "" })
         }
     }
 
@@ -283,9 +282,16 @@ class Home extends Component {
         this.setState({ openAlert: !this.state.openAlert })
     }
 
-    handleEmojiOnSelect = (e, emoji) => {
-        this.handleEmojiOnClick()
-        this.setState({ chosenEmoji: emoji })
+    handleEmojiOnSelect = (e, emojiObj) => {
+        const {selectedChatItem} = this.state
+        if(emojiObj && selectedChatItem) {
+            const {emoji, names} = emojiObj
+            const username = this.props.authResponse.username
+            const data = {content: names[1], sender: username, receiver: selectedChatItem.username, type: "CHAT", contentType: "EMOJI"}
+            this.sendMessage(data)
+            this.setState({ chosenEmoji: emojiObj })
+            this.handleEmojiOnClick()
+        }
     }
 
     handleMenuItemOnPress = (item) => {
