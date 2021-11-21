@@ -1,4 +1,6 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+
+import moment from 'moment'
 
 import {Paper, ListItemText, ListItemAvatar, Avatar, ListItemButton} from '@mui/material'
 import { makeStyles } from '@mui/styles'
@@ -12,7 +14,7 @@ const useStyles = makeStyles({
     },
     dateTime: {
         color: "rgba(255, 255, 255, 0.5)",
-        fontSize: "0.8rem"
+        fontSize: "0.6rem"
     },
     mobileItemAvatar: {
         width: 22,
@@ -21,7 +23,7 @@ const useStyles = makeStyles({
     },
     mobileDateTime: {
         color: "rgba(255, 255, 255, 0.5)",
-        fontSize: "0.5rem",
+        fontSize: "0.4rem",
         marginLeft: "5px"
     },
     mobileListItem: {
@@ -33,6 +35,34 @@ const useStyles = makeStyles({
 
 const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
     const classes = useStyles()
+    const [recentMessage, setRecentMessage] = useState("")
+    const [recentMessageDateTime, setRecentMessageDateTime] = useState(null)
+
+    useEffect(() => {
+        getRecentMessage()
+        // eslint-disable-next-line
+    }, [])
+
+    const getRecentMessage = () => {
+        const chatListLength = listItem.chats.length
+        if (chatListLength > 0) {
+            const chat = listItem.chats[chatListLength - 1]
+            setRecentMessage(chat.message)
+            let dateTime = getDateTime(chat.dateTime)
+            if (!desktopView) {
+                dateTime = getDateTimeMobile(chat.dateTime)
+            }
+            setRecentMessageDateTime(dateTime)
+        }
+    }
+
+    const getDateTime = (dateTime) => {
+        return moment(dateTime).format("DD MMM hh:mm a")
+    }
+
+    const getDateTimeMobile = (dateTime) => {
+        return moment(dateTime).format("hh:mm a")
+    }
 
     const renderMobileView = () => {
         return (
@@ -41,7 +71,7 @@ const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
                     <Avatar sx = {{ bgcolor: `rgb(${listItem.randX}, ${listItem.randY}, 0)` }} className = {classes.mobileItemAvatar}>
                         {listItem.avatar}
                     </Avatar>
-                    <span className = {classes.mobileDateTime}>{listItem.dateTime}</span>
+                    <span className = {classes.mobileDateTime}>{recentMessageDateTime}</span>
                 </ListItemAvatar>
             </ListItemButton>
         )
@@ -53,8 +83,8 @@ const ChatListItem = ({listItem, desktopView, handleChatListItemOnClick}) => {
                 <ListItemAvatar>
                     <Avatar sx = {{ bgcolor: `rgba(${listItem.randX}, ${listItem.randY}, 73)` }}>{listItem.avatar}</Avatar>
                 </ListItemAvatar>
-                <ListItemText primary = {listItem.username} sx = {{color: "rgba(255, 255, 255, 0.7)"}}/> 
-                <span className = {classes.dateTime}>{listItem.dateTime}</span>
+                <ListItemText primary = {listItem.username} secondary = {recentMessage} sx = {{color: "rgba(255, 255, 255, 0.7)"}}/> 
+                <span className = {classes.dateTime}>{recentMessageDateTime}</span>
             </ListItemButton>
         )
     }

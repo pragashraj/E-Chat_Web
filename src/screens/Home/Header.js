@@ -71,9 +71,11 @@ const Header = ({
     }
 
     const renderSecondaryUser = () => {
+        const {randX, randY} = selectedChatItem
+        const bgColor = selectedChatItem ? `rgb(${randX}, ${randY}, 0)` : secondaryUserColor
         return (
             <div className = "secondary_user_blog">
-                <Avatar sx = {{ bgcolor: secondaryUserColor }}>{selectedChatItem && selectedChatItem.avatar}</Avatar>
+                <Avatar sx = {{ bgcolor: bgColor }}>{selectedChatItem && selectedChatItem.avatar}</Avatar>
                 <div className = "secondary_user_detail">
                     <span className = "secondary_user_name">{selectedChatItem && selectedChatItem.username}</span>
                     <span className = "secondary_user_active">{selectedChatItem && selectedChatItem.active && "Active"}</span>

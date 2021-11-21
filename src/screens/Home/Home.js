@@ -10,7 +10,10 @@ import Header from './Header'
 import Footer from './Footer'
 import Chat from './Chat'
 import Alert from '../../components/Alert'
+import Loading from '../../components/Loading/Loading'
+import ConnectionError from '../../components/ConnectionError'
 import {logout} from '../../redux/actions/authAction'
+import {searchByUsername, deleteUserChat} from '../../api/user'
 
 import './Home.css'
 
@@ -28,11 +31,59 @@ class Home extends Component {
         onlineUsers: [],
         myChats: [],
         chatListItems: [],
-        openAlert: false
+        openAlert: false,
+        searchedData: [],
+        loading: true,
+        connectionError: false,
+        menuItems: ["My chats", "Online users"]
+    }
+
+    searchByUsernameApi = async(username) => {
+        try {
+            const token = this.props.authResponse.token
+            const response = await searchByUsername(username, token)
+            let data = []
+            if (response) {
+                const totalUsers = response.users
+                for (let i = 0; i < totalUsers.length; i++) {
+                    const user = totalUsers[i]
+                    const personName = user.username
+                    const item = this.createListItem(user.id, personName && personName.charAt(0), personName, false, [])
+                    data.push(item)
+                }
+            }
+
+            this.setState({ 
+                loading: false, 
+                searchedData: data, 
+                searchValue: "", 
+                chatListItems: data, 
+                selectedChatListType: "Search Results",
+                menuItems: ["Search Results", "My chats", "Online users"]
+            })
+        } catch (e) {
+            this.setState({ loading: false })
+        }
+    }
+
+    deleteUserChatApi = async(data) => {
+        try {
+            const token = this.props.authResponse.token
+            const response = await deleteUserChat(data, token)
+
+            if (response) {
+                this.setMyChatItems(response)
+            }
+
+            this.setState({ loading: false, selectedChatItem: null })
+
+        } catch (e) {
+            this.setState({ loading: false })
+        }
     }
 
     onConnected = () => {
-        this.setState({ connected: true })
+        this.setState({ connected: true, loading: false, connectionError: false })
         const user = this.props.authResponse
         if (this.clientRef && user) {
             const data = { sender: user.username, type: "JOIN" }
@@ -40,8 +91,16 @@ class Home extends Component {
         }
     }
 
+    sendMessage = (data) => {
+        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
+    }
+
     onDisconnected = () => {
-        this.setState({ connected: false })
+        this.setState({ connected: false, loading: false })
+    }
+
+    onConnectFailure = () => {
+        this.setState({ connected: false, loading: false, connectionError: true })
     }
 
     onMessageReceived = (payload) => {
@@ -72,34 +131,13 @@ class Home extends Component {
             }
 
             if (!existing) {
-                const listItem = this.createListItem(
-                    onlineUsers.length.toString,
-                    joiner.charAt(0),
-                    joiner,
-                    true,
-                    []
-                )
+                const listItem = this.createListItem(onlineUsers.length.toString, joiner.charAt(0), joiner, true, [])
                 onlineUsers.push(listItem)
                 this.setState({ onlineUsers })
             }
         } 
         else {
-            const myChatList = payload.myChatList
-            var newList = []
-            for (let i = 0; i < myChatList.length; i++) {
-                const myChat = myChatList[i]
-                const personName = myChat.personName
-                const item = this.createListItem(
-                    myChat.id,
-                    personName.charAt(0),
-                    personName,
-                    false,
-                    myChat.chats
-                )
-                newList.push(item)
-            }
-
-            this.setState({ myChats: newList, chatListItems: newList})
+            this.setMyChatItems(payload)
         }
     }
 
@@ -171,25 +209,34 @@ class Home extends Component {
         return { id, avatar, username, active, randX, randY, chats }
     }
 
-    sendMessage = () => {
-        const {messageValue, selectedChatItem} = this.state
-        const username = this.props.authResponse.username
-        const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT"}
-        this.clientRef.sendMessage('/app/sendMessage', JSON.stringify(data))
-        this.setState({ messageValue: "" })
+    setMyChatItems = (data) => {
+        const myChatList = data.myChatList
+        var newList = []
+        for (let i = 0; i < myChatList.length; i++) {
+            const myChat = myChatList[i]
+            const personName = myChat.secondaryContributor
+            const item = this.createListItem(myChat.id, personName && personName.charAt(0), personName, false, myChat.chats)
+            newList.push(item)
+        }
+
+        this.setState({ myChats: newList, chatListItems: newList})
     }
 
     handleSendOnClick = () => {
         const {messageValue, selectedChatItem} = this.state
         if (selectedChatItem && messageValue) {
-            this.sendMessage()
+            const username = this.props.authResponse.username
+            const data = {content: messageValue, sender: username, receiver: selectedChatItem.username, type: "CHAT", contentType: "STANDARD"}
+            this.sendMessage(data)
+            this.setState({ messageValue: "" })
         }
     }
 
     handleSearchOnClick = () => {
         const {searchValue} = this.state
         if (searchValue) {
-
+            this.setState({ loading: true })
+            this.searchByUsernameApi(searchValue)
         }
     }
 
@@ -198,7 +245,12 @@ class Home extends Component {
     }
 
     handleCancelOnClick = () => {
-        this.setState({ searchValue: "" })
+        this.setState({ 
+            searchValue: "",
+            chatListItems: this.state.myChats,
+            selectedChatListType: "My chats",
+            menuItems: ["My chats", "Online users"]
+        })
     }
 
     handleSettingsOnClick = (event) => {
@@ -213,17 +265,39 @@ class Home extends Component {
         this.setState({ selectedChatItem: item })
     }
 
+    handleChatOnDeleteClick = () => {
+        const {selectedChatItem} = this.state
+        if (selectedChatItem) {
+            const data = {
+                currentUser: this.props.authResponse.username,
+                secondaryContributor: selectedChatItem.username
+            }
+
+            this.setState({ loading: true })
+            this.deleteUserChatApi(data)
+        }
+    }
+
     handleOpenAlert = () => {
         this.setState({ openAlert: !this.state.openAlert })
     }
 
-    handleEmojiOnSelect = (e, emoji) => {
-        this.handleEmojiOnClick()
-        this.setState({ chosenEmoji: emoji })
+    handleEmojiOnSelect = (e, emojiObj) => {
+        const {selectedChatItem} = this.state
+        if(emojiObj && selectedChatItem) {
+            const {emoji} = emojiObj
+            const username = this.props.authResponse.username
+            const data = {content: emoji, sender: username, receiver: selectedChatItem.username, type: "CHAT", contentType: "EMOJI"}
+            this.sendMessage(data)
+            this.setState({ chosenEmoji: emojiObj })
+            this.handleEmojiOnClick()
+        }
     }
 
     handleMenuItemOnPress = (item) => {
         switch(item) {
+            case "Delete": this.handleChatOnDeleteClick()
+                break
             default: return
         }
     }
@@ -255,16 +329,16 @@ class Home extends Component {
         this.props.history.push("/")
     }
 
-    getDateAndTime = (date) => {
-        if (date) {
-            const dateSplits = date.split("T")
-            const timeSplits = dateSplits[1].split("Z")[0].split(".")
+    handleReload = () => {
+        window.location.reload(false)
+    }
 
-            return dateSplits[0] + " " + timeSplits[0]
-        }
-        else {
-            return null
-        }
+    renderConnctionErrorModal = (open) => {
+        return <ConnectionError 
+            open = {open}
+            handleLogout = {this.handleLogout}
+            handleReload = {this.handleReload}
+        />
     }
 
     renderAlertPopup = () => {
@@ -304,7 +378,7 @@ class Home extends Component {
                         handleClose = {this.handleMenuClose}
                         handleMenuItemOnPress = {this.handleMenuItemOnPress}
                         anchorEl = {anchorEl}
-                        menuItems = {["Logout"]}
+                        menuItems = {["Delete"]}
                     />
                 </div>
                 <div className = "card_right_body">
@@ -326,7 +400,7 @@ class Home extends Component {
     }
 
     renderCardLeft = () => {
-        const {searchValue, chatListItems, selectedChatListType} = this.state
+        const {searchValue, chatListItems, selectedChatListType, menuItems} = this.state
         const currentUser = this.props.authResponse
         return (
             <div className = "card_left_content">
@@ -341,6 +415,7 @@ class Home extends Component {
                     handleCancelOnClick = {this.handleCancelOnClick}
                     handleListTypeOnChange = {this.handleListTypeOnChange}
                     currentUser = {currentUser}
+                    menuItems = {menuItems}
                 />
             </div>
         )
@@ -382,13 +457,14 @@ class Home extends Component {
                 onConnect = {this.onConnected}
                 onDisconnect = {this.onDisconnected}
                 onMessage = {this.onMessageReceived}
+                onConnectFailure = {this.onConnectFailure}
                 ref = {(client) => { this.clientRef = client }}
             />
         )
     }
 
     render() {
-        const {openAlert} = this.state
+        const {openAlert, loading, connected, connectionError} = this.state
         return (
             <div className = "home_root">
                 <div className = "chat_body">
@@ -399,6 +475,8 @@ class Home extends Component {
                 { this.renderFab() }
                 { openAlert && this.renderAlertPopup() }
                 { this.renderSockJsClient() }
+                { loading && <Loading open = {loading}/> }
+                { !connected && connectionError && this.renderConnctionErrorModal(connectionError) }
             </div>
         )
     }
